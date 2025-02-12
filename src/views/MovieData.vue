@@ -5,83 +5,11 @@ import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 dayjs.extend(utc);
 dayjs.extend(timezone);
+import { useMovie } from "@/stores/movie_controller";
 
 export default {
-  /**
-   *
-   */
   setup() {
-    const baseurl = "http://localhost:4000";
-    const movie = ref([]);
-    const seats = ref([]);
-    const isPanelOpen = ref(false);
-
-    const selectedMovie = ref({ movie_name: '', genre: '', studio: '', dimulai: '', durasi: '' });
-    const openEditPanel = (movie) => {
-      selectedMovie.value = {
-        movie_name: movie.movies.judul,
-        genre: movie.movies.genre,
-        studio: movie.rooms.name,
-        dimulai: new Date(movie.time).toISOString().slice(0, 16),
-        durasi: movie.movies.durasi,
-      };
-      isPanelOpen.value = true;
-      console.log(selectedMovie.value)
-    };
-
-    const closeEditPanel = () => {
-      isPanelOpen.value = false;
-    };
-
-    const saveChanges = () => {
-      console.log('Updated Movie:', selectedMovie.value);
-      closeEditPanel();
-    };
-
-    const showSeat = async (seat, idWaktu) => {
-      const response = await fetch(`${baseurl}/movies/seats/${seat}/${idWaktu}`);
-      const data = await response.json();
-
-      if (data?.data?.seat) {
-        seats.value = data.data.seat;
-      } else {
-        seats.value = [];
-      }
-      console.log(seat + "," + idWaktu);
-      console.log(seats);
-
-    }
-    const groupedSeats = computed(() => {
-      return seats.value.reduce((acc, seat) => {
-        if (!acc[seat.row]) acc[seat.row] = [];
-        acc[seat.row].push(seat);
-        return acc;
-      }, {});
-    });
-    const formatWIB = (time) => {
-      return dayjs.utc(time).tz("Asia/Jakarta").format("DD/MM/YYYY HH:mm:ss");
-    };
-
-
-
-    const fetchmovie = async () => {
-      try {
-        const response = await fetch(baseurl + "/movies/movies");
-        const data = await response.json();
-        // users.value = data;
-        movie.value = data;
-        console.log(movie)
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
-    onMounted(() => {
-      fetchmovie()
-      // openEditPanel()
-
-    })
-
-    return { movie, formatWIB, showSeat, seats, groupedSeats, openEditPanel, closeEditPanel, isPanelOpen, selectedMovie };
+    return useMovie();
   },
 };
 </script>
@@ -110,8 +38,6 @@ export default {
                       <th>Dimulai</th>
                       <th>Duration</th>
                       <th>action</th>
-
-
                     </tr>
                   </thead>
                   <tbody>
@@ -163,7 +89,6 @@ export default {
                           <span><i data-feather="x"></i>x</span>
                         </a>
                       </div>
-                      <hr>
 
                       <h6 class="mb-5">Edit Movie</h6>
                       <p class="font-14">Menu comes in two modes: dark & light</p>

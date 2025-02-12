@@ -5,6 +5,7 @@ import {
 } from 'vue'
 import {
   createPinia
+
 } from 'pinia'
 
 import App from './App.vue'
@@ -25,11 +26,10 @@ const loads = (src) => {
     document.body.appendChild(script);
   });
 };
-const app = createApp(App)
+const app = createApp(App);
+export const piniaInstance = createPinia()
 
-app.use(createPinia())
-app.use(router)
-// ✅ Muat semua script eksternal sebelum Vue dimount
+app.use(router);
 Promise.all([
     loads('/vendors/jquery/dist/jquery.min.js'),
     loads('/vendors/popper.js/dist/umd/popper.min.js'),
