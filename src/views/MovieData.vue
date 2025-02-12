@@ -55,24 +55,9 @@ export default {
                           <i class="zmdi zmdi-edit"></i></button>
                         <!-- Setting Panel -->
 
-                        <button type="button" @click="showSeat(item.room_id, item.id)" data-toggle="dropdown"
+                        <button type="button" @click="showSeat(item.room_id, item.id)"
                           class="btn btn-secondary dropdown-toggle">seat</button>
 
-                        <div class="dropdown-menu dropdown-authentication">
-                          <template v-for="(seats, row) in groupedSeats" :key="row">
-                            <div class="d-flex align-items-center">
-                              <span class="font-weight-bold me-2" style="margin: 2px">{{ row }} </span>
-                              <div class="d-flex flex-wrap">
-                                <button v-for="seat in seats" :key="seat.id" type="button" style="margin: 4px;" :class="{
-                                  'btn btn-secondary': seat.Booking.length === 0,
-                                  'btn btn-primary': seat.Booking.length > 0
-                                }">
-                                  {{ seat.number }}
-                                </button>
-                              </div>
-                            </div>
-                          </template>
-                        </div>
 
                       </td>
                     </tr>
@@ -81,7 +66,8 @@ export default {
                   </tbody>
 
                 </table>
-                <div class="hk-settings-panel" :class="{ active: isPanelOpen }">
+                <div class="hk-settings-panel" :class="{ active: isPanelOpen ?? isPanelOpenSeat }">
+
                   <div class="nicescroll-bar position-relative">
                     <div class="settings-panel-wrap">
                       <div class="settings-panel-head">
@@ -90,37 +76,54 @@ export default {
                         </a>
                       </div>
 
-                      <h6 class="mb-5">Edit Movie</h6>
-                      <p class="font-14">Menu comes in two modes: dark & light</p>
-                      <form>
-                        <div class="form-group">
-                          <label>movie name</label>
-                          <input type="text" class="form-control" v-model="selectedMovie.movie_name">
-                        </div>
-                        <div class="form-group">
-                          <label>genre</label>
-                          <input type="text" class="form-control" v-model="selectedMovie.genre">
-                        </div>
-                        <div class="form-group">
-                          <label>studio</label>
-                          <input type="text" class="form-control" v-model="selectedMovie.studio">
-                        </div>
-                        <div class="form-group">
-                          <label>durasi</label>
-                          <input type="text" class="form-control" v-model="selectedMovie.durasi">
-                        </div>
+                      <p class="font-14">{{ panelModel === "seat" ? "Seats Bangku" : "Detail Movie" }}</p>
+                      <div class="fm" v-if="panelModel === 'detail'">
+                        <form>
+                          <div class="form-group">
+                            <label>movie name</label>
+                            <input type="text" class="form-control" v-model="selectedMovie.movie_name">
+                          </div>
+                          <div class="form-group">
+                            <label>genre</label>
+                            <input type="text" class="form-control" v-model="selectedMovie.genre">
+                          </div>
+                          <div class="form-group">
+                            <label>studio</label>
+                            <input type="text" class="form-control" v-model="selectedMovie.studio">
+                          </div>
+                          <div class="form-group">
+                            <label>durasi</label>
+                            <input type="text" class="form-control" v-model="selectedMovie.durasi">
+                          </div>
 
-                        <div class="form-group">
-                          <label>Dimulai</label>
-                          <input type="datetime-local" class="form-control" v-model="selectedMovie.dimulai">
-                        </div>
+                          <div class="form-group">
+                            <label>Dimulai</label>
+                            <input type="datetime-local" class="form-control" v-model="selectedMovie.dimulai">
+                          </div>
 
-                      </form>
-                      <hr>
+                        </form>
+                        <hr>
 
-                      <button id="reset_settings" class="btn btn-primary btn-block btn-reset mt-30">simpan edit
-                      </button>
+                        <button id="reset_settings" class="btn btn-primary btn-block btn-reset mt-30">simpan edit
+                        </button>
+                      </div>
+                      <div class="seats" v-else>
+                        <template v-for="(seats, row) in groupedSeats" :key="row">
+                          <div class="d-flex align-items-center">
+                            <span class="font-weight-bold me-2" style="margin: 2px">{{ row }} </span>
+                            <div class="d-flex flex-wrap">
+                              <button v-for="seat in seats" :key="seat.id" type="button" style="margin: 4px;" :class="{
+                                'btn btn-secondary': seat.Booking.length === 0,
+                                'btn btn-primary': seat.Booking.length > 0
+                              }">
+                                {{ seat.number }}
+                              </button>
+                            </div>
+                          </div>
+                        </template>
+                      </div>
                     </div>
+
                   </div>
                 </div>
 
@@ -134,13 +137,9 @@ export default {
     </div>
   </div>
 
-  <!-- /Container -->
-
-  <!-- Footer -->
 
 </template>
 <style scoped>
-/* Styling untuk tabel */
 .table {
   width: 100%;
   border-collapse: collapse;
@@ -156,8 +155,8 @@ export default {
 .hk-settings-panel {
   position: fixed;
   top: 60px;
-  right: -350px;
-  width: 350px;
+  right: -450px;
+  width: 450px;
   height: 100%;
   background-color: white;
   box-shadow: -2px 0 5px rgba(0, 0, 0, 0.2);
