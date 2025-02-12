@@ -15,6 +15,8 @@ export function useMovie() {
   const movie = ref([]);
   const seats = ref([]);
   const isPanelOpen = ref(false);
+  const isPanelOpenSeat = ref(false);
+  const panelModel = ref("");
 
   const selectedMovie = ref({
     movie_name: "",
@@ -33,6 +35,8 @@ export function useMovie() {
       durasi: movie.movies.durasi,
     };
     isPanelOpen.value = true;
+    panelModel.value = 'detail';
+
     console.log(selectedMovie.value);
   };
 
@@ -46,6 +50,9 @@ export function useMovie() {
   };
 
   const showSeat = async (seat, idWaktu) => {
+    isPanelOpen.value = true;
+    panelModel.value = 'seat';
+
     const response = await fetch(`${baseurl}/movies/seats/${seat}/${idWaktu}`);
     const data = await response.json();
 
@@ -92,5 +99,7 @@ export function useMovie() {
     isPanelOpen,
     selectedMovie,
     saveChanges,
+    isPanelOpenSeat,
+    panelModel
   };
 }
