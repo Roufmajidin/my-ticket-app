@@ -12,6 +12,7 @@ import App from './App.vue'
 import router from './router'
 // css c
 import '@/assets/dist/css/style.css'
+import '@/assets/dist/css/independen.css'
 import '@/assets/vendors/datatables.net-dt/css/jquery.dataTables.min.css'
 import '@/assets/vendors/datatables.net-responsive-dt/css/responsive.dataTables.min.css'
 import '@/assets/vendors/jquery-toggles/css/toggles.css'
