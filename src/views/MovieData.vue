@@ -105,12 +105,43 @@ export default {
                         }}
                       </p>
                       Movie : {{ selectedMovie.movie_name }}
-                      <div class="fm" v-if="panelModel === 'detail'">
+                      <div class="fm" v-if="panelModel === 'detail' || modeForm === 'add'">
                         <form class="nicescroll-bar">
                           <div class="form-group">
                             <label>movie name</label>
                             <input type="text" class="form-control" v-model="selectedMovie.movie_name">
                           </div>
+                          <div class="row">
+                            <div class="col-sm">
+                              <form>
+                                <!-- if seletedMovie.gambar -->
+                                <img :src="baseurl + selectedMovie.imageUrl" v-if="imageUrl != selectedMovie.imageUrl"
+                                  alt="Preview" class="avatar-img" height="100px">
+                                <img :src="imageUrl" v-if="imageUrl != selectedMovie.imageUrl" class="avatar-img"
+                                  height="100px">
+                                <div class="form-group">
+                                  <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                                    <div class="input-group-prepend">
+                                      <span class="input-group-text">Upload</span>
+                                    </div>
+                                    <div class="form-control text-truncate" data-trigger="fileinput"><i
+                                        class="glyphicon glyphicon-file fileinput-exists"></i> <span
+                                        class="fileinput-filename"></span></div>
+                                    <span class="input-group-append">
+                                      <span class=" btn btn-primary btn-file"><span class="fileinput-new"
+                                          v-if="!file">Select
+                                          file</span><span class="fileinput-exists" v-else>Change</span>
+                                        <input type="file" name="..." @change="handleFile" accept="image/*">
+                                      </span>
+                                      <a href="#" class="btn btn-secondary fileinput-exists" data-dismiss="fileinput"
+                                        v-if="file">Remove</a>
+                                    </span>
+                                  </div>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+
                           <div class="form-group">
                             <label>tahun</label>
                             <input type="text" class="form-control" v-model="selectedMovie.tahun">
@@ -181,9 +212,11 @@ export default {
 
                         </form>
                         <hr>
-
-                        <button id="reset_settings" class="btn btn-primary btn-block btn-reset mt-30"
-                          @click="saveEdit()">simpan edit
+                        <button v-if="modeForm === 'add'" id="reset_settings"
+                          class="btn btn-primary btn-block btn-reset mt-30" @click=" storeMovie()">simpan
+                        </button>
+                        <button v-if="panelModel === 'detail'" id="reset_settings"
+                          class="btn btn-primary btn-block btn-reset mt-30" @click=" saveEdit()">simpan edit
                         </button>
                       </div>
 
