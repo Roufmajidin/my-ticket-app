@@ -46,13 +46,13 @@ Promise.all([
     loads('/vendors/morris.js/morris.min.js'),
     loads('/vendors/echarts/dist/echarts-en.min.js'),
     loads('/vendors/jquery.sparkline/dist/jquery.sparkline.min.js'),
-    loads('/vendors/vectormap/jquery-jvectormap-2.0.3.min.js'),
-    loads('/vendors/vectormap/jquery-jvectormap-world-mill-en.js'),
+    // loads('/vendors/vectormap/jquery-jvectormap-2.0.3.min.js'),
+    // loads('/vendors/vectormap/jquery-jvectormap-world-mill-en.js'),
     loads('/dist/js/vectormap-data.js'),
     loads('/vendors/owl.carousel/dist/owl.carousel.min.js'),
     loads('/vendors/jquery-toast-plugin/dist/jquery.toast.min.js'),
     loads('/dist/js/init.js'),
-    loads('/dist/js/dashboard-data.js')
+    // loads('/dist/js/dashboard-data.js')
   ])
   .then(() => {
     console.log('✅ Semua script eksternal telah dimuat!');

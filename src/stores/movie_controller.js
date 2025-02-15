@@ -43,22 +43,31 @@ export function useMovie() {
     selectedStudios: []
 
   });
+  const defaultMovie = {
+    movie_name: "",
+    idm: "",
+    genre: "",
+    studio: [],
+    dimulai: [],
+    durasi: "",
+    tahun: "",
+    gambar: "",
+    sinopsis: "",
+    actor_u: "",
+    status: 0,
+    selectedStudios: []
+  };
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("id-ID", {
+      // timeZone: "Asia/Jakarta",
+
       day: "2-digit",
       month: "short",
       year: "numeric",
     });
   };
-  const formatTime = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleTimeString("id-ID", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
-    });
-  };
+
 
   const saveEdit = async () => {
     try {
@@ -147,17 +156,28 @@ export function useMovie() {
 
     isPanelOpen.value = true;
     if (tipe === 'tanggal') {
+      panelModel.value = 'seat'
+      modeForm.value = ""
+
       showPanel();
       // panelModel.value = 'seat'
-    } else {
+    }
 
+    if (tipe === 'edit') {
+      // panelModel.value = 'seat'
+      modeForm.value = "edit"
       panelModel.value = 'detail';
     }
+
 
   };
 
   const closeEditPanel = () => {
     isPanelOpen.value = false;
+    selectedMovie.value = {
+      ...defaultMovie
+    };
+
   };
 
   const saveChanges = () => {
@@ -251,6 +271,12 @@ export function useMovie() {
   };
   const addMovie = async () => {
     isPanelOpen.value = true;
+    selectedMovie.value = {
+      ...defaultMovie
+    };
+
+    // selectedMovie.value.reduce;
+
     modeForm.value = 'add';
     const response = await fetch(baseurl + "/movies/getRoom");
     const data = await response.json();
@@ -310,6 +336,11 @@ export function useMovie() {
       const data = await res.json();
       console.log(data)
       alert("added mov")
+      if (res.ok) {
+        closeEditPanel();
+        fetchMovie();
+
+      }
 
     } catch (error) {
       console.log(error)
@@ -376,6 +407,7 @@ export function useMovie() {
     showMonthList.value = false;
   };
   onMounted(() => {
+
     fetchMovie();
   });
   const filteredEvents = computed(() => {
@@ -392,9 +424,10 @@ export function useMovie() {
 
 
     const filteredStudios = selectedMovie.value.studio.filter(item => {
-      const eventDate = item.waktu.split(" ")[0];
+      const eventDate = new Date(item.waktu).toISOString().split("T")[0];
       return eventDate === selectedDate;
     });
+    console.log("Selected Date:", selectedMovie.value.studio);
 
     const studios = filteredStudios.map(movie => {
       return {
@@ -415,7 +448,10 @@ export function useMovie() {
   };
   const hasEvent = computed(() => {
 
-    return movieDates.value.map(event => event.waktu.split(" ")[0]);
+    // return movieDates.value.map(event => event.waktu.split(" ")[0]);
+    return movieDates.value.map(event =>
+      new Date(event.waktu).toISOString().split("T")[0]
+    );
   });
 
   const isEventDay = (day) => {
@@ -432,8 +468,55 @@ export function useMovie() {
       setSelectedDate(movie.waktu, movie.room_id, movie.id);
     }
   }
+  // format waktu input form
+  const formatDateTime = (dateString) => {
+    if (!dateString) return "";
+
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Januari = 0
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+
+    return `${hours}:${minutes} ${day}/${month}/${year}`;
+  };
+
+  const parseDateTime = (formattedString) => {
+    if (!formattedString) return "";
+
+    const [time, date] = formattedString.split(" ");
+    const [day, month, year] = date.split("/");
+    const [hours, minutes] = time.split(":");
+
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
+  const apani = (dateString) => {
+    if (!dateString) return "Invalid Date";
+
+    // Pastikan dateString valid sebelum parsing
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return "Invalid Date"; // Cek apakah tanggal valid
+
+    // Format tanggal: DD/MM/YYYY
+    const day = String(date.getUTCDate()).padStart(2, "0");
+    const month = String(date.getUTCMonth() + 1).padStart(2, "0"); // Bulan mulai dari 0
+    const year = date.getUTCFullYear();
+
+    // Format waktu: HH.MM
+    const hours = String(date.getUTCHours()).padStart(2, "0");
+    const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+
+    return `${day}/${month}/${year} ${hours}.${minutes}`;
+  };
+
+
+
 
   return {
+    apani,
+    formatDateTime,
+    parseDateTime,
     movie,
     formatWIB,
     showSeat,
@@ -476,7 +559,7 @@ export function useMovie() {
     isToday,
     movieDates,
     formatDate,
-    formatTime,
+    // formatTime,
     expandedMovieId,
     toggleSeats,
     storeMovie,

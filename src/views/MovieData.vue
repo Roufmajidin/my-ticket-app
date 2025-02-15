@@ -47,7 +47,8 @@ export default {
 
                     <tr v-for="(item, index) in movie" :key="index">
                       <td>{{ index + 1 }}</td>
-                      <td>{{ item.movies?.judul }}</td>
+                      <td data-toggle="tooltip-info" data-placement="right" title="Tooltip on right">{{
+                        item.movies?.judul }}</td>
                       <td>{{ item.movies?.genre }}</td>
                       <!-- <td> -->
                       <!-- {{ new Date(item.time).toISOString().slice(0, 16) }} -->
@@ -182,9 +183,11 @@ export default {
                                 <div class="fs d-flex align-items-center flex-wrap mr-2">
                                   <button class="btn btn-primary  mr-2">
                                     {{ studio.nameStudio }}
+                                    {{ studio.waktu }}
                                   </button>
                                   <div class="fs">
-                                    <input type="datetime-local" class="form-control" v-model="studio.waktu">
+                                    <input type="datetime-local" class="form-control" v-model="formattedWaktuLocal"
+                                      @input="updateWaktu" />
                                   </div>
                                 </div>
 
@@ -215,17 +218,17 @@ export default {
                         <button v-if="modeForm === 'add'" id="reset_settings"
                           class="btn btn-primary btn-block btn-reset mt-30" @click=" storeMovie()">simpan
                         </button>
-                        <button v-if="panelModel === 'detail'" id="reset_settings"
+                        <button v-if="panelModel === 'detail' && modeForm !== 'add'" id="reset_settings"
                           class="btn btn-primary btn-block btn-reset mt-30" @click=" saveEdit()">simpan edit
                         </button>
                       </div>
 
-                      <div class="seats" v-else>
+                      <div class="seats" v-if="panelModel === 'seat'">
                         <!-- calendar -->
 
 
 
-                        <div class="calendar">
+                        <div class=" calendar">
                           <div class="calendar-header">
                             <span class="month-picker" @click="toggleMonthList">
                               {{ monthNames[currentMonth] }}
@@ -284,7 +287,7 @@ export default {
 
                             {{ movie.name }}
                           </span>
-                          {{ formatTime(movie.jam) }} WIB
+                          {{ movie.jam }} WIB
                           <i style="font-size: 18px;" class="zmdi zmdi-airline-seat-recline-normal ml-4 mr-4"
                             v-if="expandedMovieId[movie.id]">{{
                               seats.length }} seat</i>
