@@ -1,6 +1,7 @@
 import {
   ref,
   computed,
+  watch,
   onMounted
 } from "vue";
 import dayjs from "dayjs";
@@ -23,7 +24,8 @@ export function useMovie() {
   const selectedDate = ref(null);
   const selectedStudios = ref([]);
   const movieDates = ref([]);
-
+  const file = ref(null);
+  const imageUrl = ref(null);
   const expandedMovieId = ref(null);
 
   const selectedMovie = ref({
@@ -60,17 +62,35 @@ export function useMovie() {
 
   const saveEdit = async () => {
     try {
+      const fd = new FormData();
+      fd.append("id", selectedMovie.value.idm || "");
+      fd.append("judul", selectedMovie.value.movie_name || "");
+      fd.append("genre", selectedMovie.value.genre || "");
+      fd.append("tahun", selectedMovie.value.tahun || "");
+      fd.append("showTime", "-");
+      fd.append("sinopsis", selectedMovie.value.sinopsis || "");
+      fd.append("durasi", selectedMovie.value.durasi || "");
+      fd.append("actor_u", selectedMovie.value.actor_u || "");
+      if (file.value) {
+        fd.append("gambar", file.value);
+      } else if (selectedMovie.value.gambar) {
+        fd.append("gambarLama", selectedMovie.value.gambar);
+      }
       const resp = await fetch(baseurl + '/movies/saveEdit', {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json'
+          // 'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
-        body: JSON.stringify(selectedMovie.value)
+        // body: JSON.stringify(selectedMovie.value)
+        body: fd
       })
       await resp.json();
       if (resp.ok) {
         closeEditPanel();
         fetchMovie();
+        file.value = null;
+        imageUrl.value = null;
       }
     } catch (error) {
       console.error("Gagal menonaktifkan studio:", error);
@@ -112,12 +132,18 @@ export function useMovie() {
       durasi: movie.movies ? movie.movies.durasi : "N/A",
       actor_u: movie.movies ? movie.movies.actor_u : "N/A",
       gambar: movie.movies ? movie.movies.gambar : "",
+      imageUrl: movie.movies.gambar,
       tahun: movie.movies ? movie.movies.tahun : "N/A",
       sinopsis: movie.movies ? movie.movies.sinopsis : "N/A",
       selectedStudios: movie.waktu.filter(w => w.status === 1).map(w => w.id),
 
     };
-    // console.log(selectedMovie.value);
+    // imageUrl.value = movie.movies.gambar,
+    file.value = movie.movies.gambar
+
+    console.log('hallo', file.value);
+    // console.log("Image URL:", selectedMovie.value.imageUrl);
+
 
     isPanelOpen.value = true;
     if (tipe === 'tanggal') {
@@ -178,7 +204,7 @@ export function useMovie() {
       }
     }
 
-    // Kirim data ke backend
+    // Kirim data => backend
     // await updateStudioStatus(studiosToSend);
   };
 
@@ -230,6 +256,65 @@ export function useMovie() {
     const data = await response.json();
     canSeat.value = data;
     console.log(canSeat);
+  }
+  // addd gbr
+  const handleFile = (event) => {
+    console.log("📂 File dipilih!");
+
+    const selectedFile = event.target.files[0];
+
+    if (selectedFile) {
+      file.value = selectedFile;
+      imageUrl.value = URL.createObjectURL(selectedFile);
+
+      console.log("✅ Image URL berhasil dibuat:", imageUrl.value);
+    } else {
+      console.log("⚠️ Tidak ada file yang dipilih");
+    }
+  };
+
+  watch(imageUrl, (newVal) => {
+    console.log("🔄 imageUrl updated:", newVal);
+  });
+  const storeMovie = async (movie) => {
+    // console.log(selectedMovie.value)
+    const fd = new FormData();
+    fd.append("judul", selectedMovie.value.movie_name || "");
+    fd.append("genre", selectedMovie.value.genre || "");
+    fd.append("tahun", selectedMovie.value.tahun || "");
+    fd.append("showTime", "-");
+    fd.append("sinopsis", selectedMovie.value.sinopsis || "");
+    fd.append("durasi", selectedMovie.value.durasi || "");
+    fd.append("actor_u", selectedMovie.value.actor_u || "");
+    fd.append("gambar", file.value);
+
+    try {
+      const d = {
+        'judul': selectedMovie.value.movie_name,
+        'genre': selectedMovie.value.genre,
+        'tahun': parseInt(selectedMovie.value.tahun),
+        'showTime': '-',
+        'sinopsis': selectedMovie.value.sinopsis,
+        'duruasi': parseInt(selectedMovie.value.duruasi),
+        'actor_u': selectedMovie.value.actor_u,
+        'gambar': file.value,
+
+      }
+      const res = await fetch(baseurl + '/movies/movieadd', {
+        method: "POST",
+        headers: {
+          'Accept': 'application/json'
+        },
+        body: fd
+      })
+      const data = await res.json();
+      console.log(data)
+      alert("added mov")
+
+    } catch (error) {
+      console.log(error)
+
+    }
   }
   const monthNames = ref([
     "January", "February", "March", "April", "May", "June",
@@ -393,6 +478,11 @@ export function useMovie() {
     formatDate,
     formatTime,
     expandedMovieId,
-    toggleSeats
+    toggleSeats,
+    storeMovie,
+    handleFile,
+    imageUrl,
+    file,
+    baseurl
   };
 }
