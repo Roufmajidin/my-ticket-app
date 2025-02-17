@@ -27,7 +27,8 @@ export function useMovie() {
   const file = ref(null);
   const imageUrl = ref(null);
   const expandedMovieId = ref(null);
-
+  const isaddevent = ref(false);
+  const isdatevalue = ref(false);
   const selectedMovie = ref({
     movie_name: "",
     idm: "",
@@ -174,6 +175,7 @@ export function useMovie() {
 
   const closeEditPanel = () => {
     isPanelOpen.value = false;
+    isaddevent.value = false;
     selectedMovie.value = {
       ...defaultMovie
     };
@@ -509,6 +511,15 @@ export function useMovie() {
 
     return `${day}/${month}/${year} ${hours}.${minutes}`;
   };
+  const addevent = (pr) => {
+
+    isaddevent.value = true;
+
+  }
+
+  const saveevent = (pr) => {
+
+  }
 
 
 
@@ -566,6 +577,10 @@ export function useMovie() {
     handleFile,
     imageUrl,
     file,
-    baseurl
+    baseurl,
+    addevent,
+    isaddevent,
+    isdatevalue,
+    saveevent,
   };
 }
