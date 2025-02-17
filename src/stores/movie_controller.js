@@ -28,7 +28,9 @@ export function useMovie() {
   const imageUrl = ref(null);
   const expandedMovieId = ref(null);
   const isaddevent = ref(false);
-  const isdatevalue = ref(false);
+  const isdatevalue = ref(new Date());
+  const room = ref([]);
+  const info = ref([]);
   const selectedMovie = ref({
     movie_name: "",
     idm: "",
@@ -496,16 +498,14 @@ export function useMovie() {
   const apani = (dateString) => {
     if (!dateString) return "Invalid Date";
 
-    // Pastikan dateString valid sebelum parsing
     const date = new Date(dateString);
-    if (isNaN(date.getTime())) return "Invalid Date"; // Cek apakah tanggal valid
+    if (isNaN(date.getTime())) return "Invalid Date";
 
     // Format tanggal: DD/MM/YYYY
     const day = String(date.getUTCDate()).padStart(2, "0");
-    const month = String(date.getUTCMonth() + 1).padStart(2, "0"); // Bulan mulai dari 0
+    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
     const year = date.getUTCFullYear();
 
-    // Format waktu: HH.MM
     const hours = String(date.getUTCHours()).padStart(2, "0");
     const minutes = String(date.getUTCMinutes()).padStart(2, "0");
 
@@ -516,11 +516,66 @@ export function useMovie() {
     isaddevent.value = true;
 
   }
+  // TODOD date input
+  const isdatechanged = async () => {
+    console.log(isdatevalue.value);
+    room.value = [];
+    info.value = [];
+    await getRoom();
+    console.log("room :", room.value)
 
+    // isdatevalue.value = isdatevalue.value
+  }
   const saveevent = (pr) => {
+    console.log('movie,', selectedMovie.value)
+    console.log('tanggal terpilih :' + isdatevalue.value);
 
   }
+  // TODOD get studio utk di selecting
 
+  const getRoom = async () => {
+    const response = await fetch(baseurl + "/movies/getRoom");
+    const data = await response.json();
+    room.value = data;
+    // if (info.value.status === 'success') {
+    //   filteringdata();
+
+    // }
+    // canSeat.value = data;
+    // console.log(canSeat);
+  }
+  // TODOD filter data ke be berdasarkan waktu (biar ga conflicting
+  // TODOD movie pada timestamp tertntu (waktu tayang))
+
+  const filteringdata = async (event) => {
+    const waktu_terpilih = isdatevalue.value;
+    console.log("waktu :", isdatevalue.value);
+
+    console.log("Studio terpilih:", event.target.value, 'waktu_terpilih :', waktu_terpilih);
+    const resp = await fetch(baseurl + "/movies/room/" + event.target.value, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        "waktu": waktu_terpilih
+      })
+
+    });
+    const data = await resp.json();
+    if (!resp.ok) {
+      // throw new Error(`HTTP error! Status: ${resp.status}`);
+      info.value = data;
+    }
+    if (resp.status === 200) {
+      info.value = {
+        message: "Berhasil menyimpan data studio",
+        status: "success",
+      };
+    }
+    console.log("Response dari server:", info.value);
+    // console.log(resp.body)
+  }
 
 
 
@@ -582,5 +637,11 @@ export function useMovie() {
     isaddevent,
     isdatevalue,
     saveevent,
+    isdatechanged,
+    getRoom,
+    room,
+    filteringdata,
+    info
+
   };
 }
