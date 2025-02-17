@@ -215,24 +215,40 @@ export default {
 
                         </form>
                         <hr>
-                        <button v-if="modeForm === 'add'" id="reset_settings"
-                          class="btn btn-primary btn-block btn-reset mt-30" @click=" storeMovie()">simpan
-                        </button>
-                        <button v-if="panelModel === 'detail' && modeForm !== 'add'" id="reset_settings"
-                          class="btn btn-primary btn-block btn-reset mt-30" @click=" saveEdit()">simpan edit
-                        </button>
+
                       </div>
 
                       <div class="seats" v-if="panelModel === 'seat'">
                         <div class="d-flex align-items-center">
-                          <button id="" v-on:click="addevent()" class="btn btn-primary ml-4">{{ isaddevent == false
-                            ? 'Add event' : 'Save event'
+                          <div class="dd" v-if="info['status'] != 'success'">
+
+                            <button id="" v-on:click=" addevent()" class="btn btn-info ml-4 ">{{
+
+                              'Add event'
                             }}</button>
+                          </div>
+                          <div class="dd" v-if="info['status'] == 'success'">
+
+                            <button id="" v-on:click=" saveevent()" class="btn btn-info ml-4 ">{{
+
+                              'save event'
+                            }}</button>
+                          </div>
+
                           <div class="fs ml-2 p-4" v-if="isaddevent == true">
-                            <input type="datetime-local" class="form-control" @change="isdatechanged()" />
+                            <input type="datetime-local" class="form-control" @change="isdatechanged()"
+                              v-model="isdatevalue" />
                           </div>
                         </div>
-                        <!-- calendar -->
+                        <select v-if="isaddevent === true" @change="filteringdata"
+                          class="form-control custom-select form-control custom-select-sm mt-15 ml-4 mr-4">
+                          <option selected>Pilih studio</option>
+                          <option v-for="rooms in room" :key="rooms.id" :value="rooms.id">{{ rooms.name }}
+                          </option>
+                        </select>
+                        <div class="alert alert-warning" v-if="info['status'] != 'success'" role="alert">
+                          {{ info['conflict'] }}
+                        </div>
 
 
 
