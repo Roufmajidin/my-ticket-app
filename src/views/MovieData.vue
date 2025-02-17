@@ -224,6 +224,14 @@ export default {
                       </div>
 
                       <div class="seats" v-if="panelModel === 'seat'">
+                        <div class="d-flex align-items-center">
+                          <button id="" v-on:click="addevent()" class="btn btn-primary ml-4">{{ isaddevent == false
+                            ? 'Add event' : 'Save event'
+                            }}</button>
+                          <div class="fs ml-2 p-4" v-if="isaddevent == true">
+                            <input type="datetime-local" class="form-control" @change="isdatechanged()" />
+                          </div>
+                        </div>
                         <!-- calendar -->
 
 
