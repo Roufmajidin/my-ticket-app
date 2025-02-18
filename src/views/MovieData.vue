@@ -68,11 +68,11 @@ export default {
                       <td>{{ item.movies.durasi }} min</td>
 
                       <td>
-                        <button type="button" class="btn btn-info mr-2" @click="openEditPanel(item, 'tanggal')"> <i
-                            class=" zmdi
+                        <button type="button" class="btn btn-info mr-2" @click="openEditPanel(item, 'tanggal', index)">
+                          <i class=" zmdi
                           zmdi-calendar font-18"></i>
                         </button>
-                        <button type="button" class="btn btn-success mr-2" @click="openEditPanel(item, 'edit')">
+                        <button type="button" class="btn btn-success mr-2" @click="openEditPanel(item, 'edit', index)">
 
                           <i class="zmdi zmdi-edit"></i></button>
                         <!-- Setting Panel -->

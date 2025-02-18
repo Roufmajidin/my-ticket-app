@@ -32,6 +32,7 @@ export function useMovie() {
   const room = ref([]);
   const info = ref([]);
   const selectedRoom = ref(0);
+  const indexing = ref(0);
   const selectedMovie = ref({
     movie_name: "",
     idm: "",
@@ -113,8 +114,10 @@ export function useMovie() {
     console.log(selectedMovie.value)
   }
 
-  const openEditPanel = (movie, tipe) => {
+  const openEditPanel = (movie, tipe, index) => {
     expandedMovieId.value = {};
+    indexing.value = index;
+    console.log('index tapping', indexing.value)
     movieDates.value = []
 
     selectedMovie.value = {
@@ -180,6 +183,7 @@ export function useMovie() {
     isPanelOpen.value = false;
     isaddevent.value = false;
     info.value = [];
+    indexing.value = 0;
     isdatevalue.value = [];
     selectedMovie.value = {
       ...defaultMovie
@@ -192,6 +196,7 @@ export function useMovie() {
     closeEditPanel();
   };
   const showPanel = (seats) => {
+    console.log('showp')
     isPanelOpen.value = true;
     panelModel.value = 'seat';
     allSeatInData.value = seats;
@@ -213,6 +218,8 @@ export function useMovie() {
       };
     });
     movieDates.value = studios;
+    console.log('showp', movieDates.value)
+
     console.log("Updated movieDates:", movieDates.value);
 
 
@@ -271,6 +278,7 @@ export function useMovie() {
       console.log("Fetched Data:", data);
 
       movie.value = data;
+      // movieDates.value = data;
       console.log(movie.value)
     } catch (error) {
       console.error("Error fetching movies:", error);
@@ -416,6 +424,11 @@ export function useMovie() {
   onMounted(() => {
 
     fetchMovie();
+    watch(movieDates, () => {
+      console.log("movieDates updated, recalculating events...");
+      currentMonth.value = (currentMonth.value + 1) % 12; // Paksa perubahan
+      currentMonth.value = (currentMonth.value - 1 + 12) % 12; // Kembalikan ke bulan awal
+    });
   });
   const filteredEvents = computed(() => {
     if (!selectedDate.value) return [];
@@ -556,14 +569,17 @@ export function useMovie() {
 
     });
     await resp.json();
+
+
+    // console.log("hehe", indexing.value)
     if (!resp.ok) {
       // throw new Error(`HTTP error! Status: ${resp.status}`);
       // info.value = data;
     }
     if (resp.status === 200) {
-      // closeEditPanel();
-      // fetchMovie();
-      // openEditPanel();
+      await fetchMovie();
+      openEditPanel(movie.value[indexing.value], 'tanggal', indexing.value)
+
     }
     console.log("Response dari server:", info.value);
 
@@ -681,7 +697,8 @@ export function useMovie() {
     getRoom,
     room,
     filteringdata,
-    info
+    info,
+    indexing
 
   };
 }
