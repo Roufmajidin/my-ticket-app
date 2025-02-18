@@ -31,6 +31,7 @@ export function useMovie() {
   const isdatevalue = ref(new Date());
   const room = ref([]);
   const info = ref([]);
+  const selectedRoom = ref(0);
   const selectedMovie = ref({
     movie_name: "",
     idm: "",
@@ -178,6 +179,8 @@ export function useMovie() {
   const closeEditPanel = () => {
     isPanelOpen.value = false;
     isaddevent.value = false;
+    info.value = [];
+    isdatevalue.value = [];
     selectedMovie.value = {
       ...defaultMovie
     };
@@ -526,9 +529,43 @@ export function useMovie() {
 
     // isdatevalue.value = isdatevalue.value
   }
-  const saveevent = (pr) => {
-    console.log('movie,', selectedMovie.value)
-    console.log('tanggal terpilih :' + isdatevalue.value);
+  const saveevent = async (pr) => {
+    // console.log('movie,', selectedMovie.value)
+    // TODO:: save event penayayangan
+    // const data = {
+
+    //   time: isdatevalue.value,
+    //   roomId: selectedRoom.value,
+    //   movieId: selectedMovie.value.idm,
+    //   movieName: selectedMovie.value.movie_name
+    // }
+
+    // console.log(data);
+    const resp = await fetch(baseurl + "/movies/event", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        time: isdatevalue.value,
+        roomId: selectedRoom.value,
+        movieId: selectedMovie.value.idm,
+        movieName: selectedMovie.value.movie_name
+
+      })
+
+    });
+    await resp.json();
+    if (!resp.ok) {
+      // throw new Error(`HTTP error! Status: ${resp.status}`);
+      // info.value = data;
+    }
+    if (resp.status === 200) {
+      // closeEditPanel();
+      // fetchMovie();
+      // openEditPanel();
+    }
+    console.log("Response dari server:", info.value);
 
   }
   // TODOD get studio utk di selecting
@@ -548,8 +585,11 @@ export function useMovie() {
   // TODOD movie pada timestamp tertntu (waktu tayang))
 
   const filteringdata = async (event) => {
+    // room
+    // console.log('id', event)
     const waktu_terpilih = isdatevalue.value;
     console.log("waktu :", isdatevalue.value);
+    selectedRoom.value = event.target.value;
 
     console.log("Studio terpilih:", event.target.value, 'waktu_terpilih :', waktu_terpilih);
     const resp = await fetch(baseurl + "/movies/room/" + event.target.value, {

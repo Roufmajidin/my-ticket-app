@@ -180,8 +180,8 @@ export default {
                                 class="d-flex align-items-center m-2">
 
                                 <!-- Tombol Studio -->
-                                <div class="fs d-flex align-items-center flex-wrap mr-2">
-                                  <button class="btn btn-primary  mr-2">
+                                <div class="fs d-flex align-items-center flex-wrap mr-1">
+                                  <button class="btn btn-primary  mr-1">
                                     {{ studio.nameStudio }}
                                     {{ studio.waktu }}
                                   </button>
@@ -217,38 +217,48 @@ export default {
                         <hr>
 
                       </div>
+                      <button v-if="modeForm === 'add'" id="reset_settings"
+                        class="btn btn-primary btn-block btn-reset mt-30" @click=" storeMovie()">simpan
+                      </button>
+
+                      <button v-if="panelModel === 'detail' && modeForm !== 'add'" id="reset_settings"
+                        class="btn btn-primary btn-block btn-reset mt-30" @click=" saveEdit()">simpan edit
+                      </button>
 
                       <div class="seats" v-if="panelModel === 'seat'">
-                        <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center " style="width: 390px;">
                           <div class="dd" v-if="info['status'] != 'success'">
 
-                            <button id="" v-on:click=" addevent()" class="btn btn-info ml-4 ">{{
+                            <button id="" v-on:click=" addevent()" class="btn btn-info ml-1 ">{{
 
                               'Add event'
                             }}</button>
                           </div>
+
                           <div class="dd" v-if="info['status'] == 'success'">
 
-                            <button id="" v-on:click=" saveevent()" class="btn btn-info ml-4 ">{{
+                            <button id="" v-on:click=" saveevent()" class="btn btn-info ml-1 ">{{
 
                               'save event'
                             }}</button>
                           </div>
 
-                          <div class="fs ml-2 p-4" v-if="isaddevent == true">
-                            <input type="datetime-local" class="form-control" @change="isdatechanged()"
-                              v-model="isdatevalue" />
+                          <div class="fs ml-6 p-4" v-if="isaddevent == true">
+                            <input style="width: 200px;" type="datetime-local" class="form-control"
+                              @change="isdatechanged()" v-model="isdatevalue" />
                           </div>
                         </div>
-                        <select v-if="isaddevent === true" @change="filteringdata"
-                          class="form-control custom-select form-control custom-select-sm mt-15 ml-4 mr-4">
+                        <select v-if="isaddevent === true" @change="filteringdata" style="width: 390px;"
+                          class="form-control custom-select form-control custom-select-sm mt-15 ml-1">
                           <option selected>Pilih studio</option>
                           <option v-for="rooms in room" :key="rooms.id" :value="rooms.id">{{ rooms.name }}
                           </option>
                         </select>
-                        <div class="alert alert-warning" v-if="info['status'] != 'success'" role="alert">
+                        <div style="width: 390px;" class="alert alert-warning ml-1" v-if="info['status'] != 'success'"
+                          role="alert">
                           {{ info['conflict'] }}
                         </div>
+                        <!-- calendar -->
 
 
 
@@ -312,7 +322,7 @@ export default {
                             {{ movie.name }}
                           </span>
                           {{ movie.jam }} WIB
-                          <i style="font-size: 18px;" class="zmdi zmdi-airline-seat-recline-normal ml-4 mr-4"
+                          <i style="font-size: 18px;" class="zmdi zmdi-airline-seat-recline-normal ml-2 mr-4"
                             v-if="expandedMovieId[movie.id]">{{
                               seats.length }} seat</i>
                           <i class=" zmdi "
