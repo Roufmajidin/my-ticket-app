@@ -4,6 +4,7 @@ import {
 } from 'vue-router'
 // import HomeView from '../views/HomeView.vue'
 import MovieData from '../views/MovieData.vue'
+import users from '../views/users.vue'
 
 const router = createRouter({
   history: createWebHistory(
@@ -17,6 +18,13 @@ const router = createRouter({
       path: '/movie',
       name: 'home',
       component: MovieData,
+    },
+
+    {
+
+      path: '/users',
+      name: 'users',
+      component: users,
     },
     // {
     //   path: '/about',
