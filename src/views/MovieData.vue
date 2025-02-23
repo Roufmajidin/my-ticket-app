@@ -321,7 +321,8 @@ export default {
 
                             {{ movie.name }}
                           </span>
-                          {{ movie.jam }} WIB
+                          {{ formatedf(movie.waktu) }}
+
                           <i style="font-size: 18px;" class="zmdi zmdi-airline-seat-recline-normal ml-2 mr-4"
                             v-if="expandedMovieId[movie.id]">{{
                               seats.length }} seat</i>

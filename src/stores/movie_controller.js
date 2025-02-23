@@ -632,11 +632,30 @@ export function useMovie() {
     console.log("Response dari server:", info.value);
     // console.log(resp.body)
   }
+  // fix
+  const formatedf = (timestamp) => {
+    const date = new Date(timestamp);
+
+    const bulan = [
+      "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+      "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+    ];
+
+    const day = date.getDate();
+    const month = bulan[date.getMonth()];
+    const year = date.getFullYear();
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+
+    return `${day} ${month} ${year} ${hours}:${minutes}`;
+  };
+
 
 
 
   return {
     apani,
+    formatedf,
     formatDateTime,
     parseDateTime,
     movie,
