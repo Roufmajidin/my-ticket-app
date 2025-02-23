@@ -5,6 +5,7 @@ import {
 // import HomeView from '../views/HomeView.vue'
 import MovieData from '../views/MovieData.vue'
 import users from '../views/users.vue'
+import users_detail from '../views/users_detail.vue'
 
 const router = createRouter({
   history: createWebHistory(
@@ -26,6 +27,12 @@ const router = createRouter({
       name: 'users',
       component: users,
     },
+    {
+      path: '/users/detail/:id',
+      name: 'users_detail',
+      component: users_detail,
+      props: true
+    }
     // {
     //   path: '/about',
     //   name: 'about',

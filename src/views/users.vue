@@ -48,9 +48,12 @@ export default {
                       <td>{{ item.email }}</td>
                       <td>{{ formatDate(item.created_at) }}</td>
                       <td>
-                        <button type="button" class="btn btn-success mr-2">
+                        <router-link :to="{ name: 'users_detail', params: { id: item.id } }">
 
-                          <i class="zmdi zmdi-run"></i></button>
+                          <button type="button" class="btn btn-success mr-2">
+
+                            <i class="zmdi zmdi-run"></i></button>
+                        </router-link>
                       </td>
                     </tr>
 

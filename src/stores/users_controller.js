@@ -1,7 +1,6 @@
 import {
   ref,
-  computed,
-  watch,
+
   onMounted
 } from "vue";
 import dayjs from "dayjs";
@@ -54,12 +53,21 @@ export function useUsers() {
   };
 
 
+  const getUserId = async (id) => {
+    const res = await fetch(baseurl + "movies/users/" + id)
+    const data = await res.json();
+    // console.log('hhak', data.data)
+    return data.data;
+  }
+
 
   return {
     users,
     baseurl,
     getUsers,
-    formatDate
+    formatDate,
+    getUserId
 
   }
+
 }
