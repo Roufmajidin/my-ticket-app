@@ -19,7 +19,7 @@ export default {
     // return useUsers;
     const route = useRoute()
     const user = ref([])
-    const { getUserId, formatDate, isPanel, indexing, data, closePanel, openEditPanel } = useUsers();
+    const { getUserId, formatDate, isPanel, indexing, data, closePanel, openEditPanel, formattgl } = useUsers();
 
     onMounted(async () => {
       // return
@@ -28,7 +28,7 @@ export default {
 
     })
 
-    return { user, formatDate, isPanel, indexing, data, closePanel, openEditPanel };
+    return { user, formatDate, isPanel, indexing, data, closePanel, openEditPanel, formattgl };
 
   }
 
@@ -73,7 +73,7 @@ export default {
                     <tr v-for="(item, index) in user.data_booking" :key="index">
                       <td>{{ index + 1 }}</td>
 
-                      <td>{{ formatDate(item.booking_date) }}</td>
+                      <td>{{ item.booking_date }}</td>
                       <td>
                         <span v-for="(i, idx) in item.bookings" :key="idx">
                           <li href="">{{ i.seat.row }} {{ i.seat.number }}</li>
@@ -89,11 +89,16 @@ export default {
                       </td>
                       <td>
                         <span v-for="(i, idx) in item.bookings" :key="idx">
-                          <li href="">{{ formatDate(i.waktu.tayang.time) }}</li>
-
+                          <li href="">{{ formattgl(i.waktu.tayang.time) }}</li>
+                          <!-- <td>
+                        <vue-qrcode class="qr-code" v-if="i.qr_code" :value="i.qr_code"
+                          :options="{ width: 160 }"></vue-qrcode>
+                        <p>{{ i.qr_code }}</p>
+                      </td> -->
                         </span>
                       </td>
                       <td>sukses</td>
+
                       <td>
                         <button type="button" class="btn btn-info mr-2"
                           @click="openEditPanel(index, user.data_booking[index])">
@@ -135,11 +140,12 @@ export default {
                         </div>
                         <div class="booking-info">
                           <h3>Booking #{{ index + 1 }}</h3>
-                          <p><strong>Dibuat:</strong> {{ formatDate(booking.booking_date) }}</p>
+                          <p><strong>Dibuat:</strong> {{ formattgl(booking.booking_date) }}</p>
                           <p><strong>Movie Name:</strong> {{ booking.movie.judul }}</p>
+                          <p><strong>Harga:</strong> {{ booking.movie.harga }}</p>
                           <p><strong>Method Payment:</strong> {{ booking.method_payment }}</p>
                           <p><strong>Seat:</strong> {{ booking.seat.row }}{{ booking.seat.number }}</p>
-                          <p><strong>Tanggal Tayang:</strong> {{ formatDate(booking.waktu.tayang.time) }}</p>
+                          <p><strong>Tanggal Tayang:</strong> {{ formattgl(booking.waktu.tayang.time) }}</p>
 
 
                         </div>

@@ -112,6 +112,10 @@ export default {
                             <label>movie name</label>
                             <input type="text" class="form-control" v-model="selectedMovie.movie_name">
                           </div>
+                          <div class="form-group">
+                            <label>Harga /ticket</label>
+                            <input type="text" class="form-control" v-model="selectedMovie.harga">
+                          </div>
                           <div class="row">
                             <div class="col-sm">
                               <form>
@@ -256,6 +260,7 @@ export default {
                         </select>
                         <div style="width: 390px;" class="alert alert-warning ml-1" v-if="info['status'] != 'success'"
                           role="alert">
+                          {{ info['status'] }}
                           {{ info['conflict'] }}
                         </div>
                         <!-- calendar -->
@@ -321,7 +326,7 @@ export default {
 
                             {{ movie.name }}
                           </span>
-                          {{ formatedf(movie.waktu) }}
+                          {{ formattgl(movie.waktu) }}
 
                           <i style="font-size: 18px;" class="zmdi zmdi-airline-seat-recline-normal ml-2 mr-4"
                             v-if="expandedMovieId[movie.id]">{{

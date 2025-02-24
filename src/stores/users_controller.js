@@ -75,7 +75,17 @@ export function useUsers() {
     data.value = [];
     indexing.value = 0;
   }
-
+  const formattgl = (dateString) => {
+    const date = new Date(dateString);
+    return date.toUTCString("UTC", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false, // Format 24 jam
+    });
+  }
 
   return {
     users,
@@ -88,7 +98,8 @@ export function useUsers() {
     data,
     indexing,
     closePanel,
-    openEditPanel
+    openEditPanel,
+    formattgl
 
   }
 

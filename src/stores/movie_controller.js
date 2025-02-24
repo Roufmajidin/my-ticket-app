@@ -44,6 +44,7 @@ export function useMovie() {
     gambar: "",
     sinopsis: "",
     actor_u: "",
+    harga: 0,
     status: 0,
     selectedStudios: []
 
@@ -58,6 +59,7 @@ export function useMovie() {
     tahun: "",
     gambar: "",
     sinopsis: "",
+    harga: 0,
     actor_u: "",
     status: 0,
     selectedStudios: []
@@ -85,6 +87,7 @@ export function useMovie() {
       fd.append("sinopsis", selectedMovie.value.sinopsis || "");
       fd.append("durasi", selectedMovie.value.durasi || "");
       fd.append("actor_u", selectedMovie.value.actor_u || "");
+      fd.append("harga", selectedMovie.value.harga || "");
       if (file.value) {
         fd.append("gambar", file.value);
       } else if (selectedMovie.value.gambar) {
@@ -148,6 +151,7 @@ export function useMovie() {
       durasi: movie.movies ? movie.movies.durasi : "N/A",
       actor_u: movie.movies ? movie.movies.actor_u : "N/A",
       gambar: movie.movies ? movie.movies.gambar : "",
+      harga: movie.movies ? movie.movies.harga : "",
       imageUrl: movie.movies.gambar,
       tahun: movie.movies ? movie.movies.tahun : "N/A",
       sinopsis: movie.movies ? movie.movies.sinopsis : "N/A",
@@ -321,6 +325,7 @@ export function useMovie() {
     // console.log(selectedMovie.value)
     const fd = new FormData();
     fd.append("judul", selectedMovie.value.movie_name || "");
+    fd.append("harga", selectedMovie.value.harga || "");
     fd.append("genre", selectedMovie.value.genre || "");
     fd.append("tahun", selectedMovie.value.tahun || "");
     fd.append("showTime", "-");
@@ -621,7 +626,12 @@ export function useMovie() {
     const data = await resp.json();
     if (!resp.ok) {
       // throw new Error(`HTTP error! Status: ${resp.status}`);
-      info.value = data;
+      const datas = {
+        "status": data.status,
+        conflict: `Movie: ${data.conflict.movie_title} dengan waktu ${formattgl(data.conflict.existing_start_time)} - ${formattgl(data.conflict.existing_end_time)}`
+
+      }
+      info.value = datas;
     }
     if (resp.status === 200) {
       info.value = {
@@ -650,10 +660,24 @@ export function useMovie() {
     return `${day} ${month} ${year} ${hours}:${minutes}`;
   };
 
+  const formattgl = (dateString) => {
+    const date = new Date(dateString);
+    return date.toUTCString("UTC", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false, // Format 24 jam
+    });
+  }
+
+
 
 
 
   return {
+    formattgl,
     apani,
     formatedf,
     formatDateTime,
