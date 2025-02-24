@@ -12,6 +12,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@chenfengyuan/vue-qrcode": "^2.0.0",
     "axios": "^1.7.9",
     "dayjs": "^1.11.13",
     "pinia": "^2.3.1",

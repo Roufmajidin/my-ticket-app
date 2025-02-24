@@ -15,7 +15,9 @@ dayjs.extend(timezone);
 export function useUsers() {
   const users = ref([]);
   const baseurl = "http://localhost:4000/";
-
+  const indexing = ref(0);
+  const isPanel = ref(false)
+  const data = ref([]);
 
   //
   onMounted(() => {
@@ -59,6 +61,20 @@ export function useUsers() {
     // console.log('hhak', data.data)
     return data.data;
   }
+  // open panel
+  const openEditPanel = (index, datas) => {
+    isPanel.value = true;
+
+    indexing.value = index;
+    data.value = datas;
+    console.log('index', indexing.value, 'data', data.value);
+
+  }
+  const closePanel = () => {
+    isPanel.value = false;
+    data.value = [];
+    indexing.value = 0;
+  }
 
 
   return {
@@ -66,7 +82,13 @@ export function useUsers() {
     baseurl,
     getUsers,
     formatDate,
-    getUserId
+    getUserId,
+    // panel v
+    isPanel,
+    data,
+    indexing,
+    closePanel,
+    openEditPanel
 
   }
 
