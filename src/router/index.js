@@ -26,13 +26,18 @@ const router = createRouter({
       path: '/users',
       name: 'users',
       component: users,
+      props: (route) => ({
+        isScan: route.query.isScan
+      }) // Ambil dari query
+
     },
     {
       path: '/users/detail/:id',
       name: 'users_detail',
       component: users_detail,
       props: true
-    }
+    },
+
     // {
     //   path: '/about',
     //   name: 'about',

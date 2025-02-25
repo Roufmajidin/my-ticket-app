@@ -135,7 +135,7 @@ export default {
                       <div v-for="(booking, index) in data.bookings" :key="index" class="booking-item">
                         <div class="qr-container">
                           <vue-qrcode class="qr-code" v-if="booking.qr_code" :value="booking.qr_code"
-                            :options="{ width: 160 }"></vue-qrcode>
+                            :options="{ width: 300, scale: 20, type: 'image/png' }"></vue-qrcode>
 
                         </div>
                         <div class="booking-info">

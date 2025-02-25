@@ -224,6 +224,11 @@ import { RouterLink, RouterView } from 'vue-router'
                   zmdi zmdi-assignment-account ml-2"> Users</i></router-link>
             </li>
 
+            <li class=" nav-item nav-link link-with-badge text"><router-link class="nav-link"
+                :to="{ name: 'users', query: { isScan: 'true' } }"><i class="
+                  zmdi zmdi-assignment-account ml-2"> Scanner</i></router-link>
+            </li>
+
 
 
           </ul>
