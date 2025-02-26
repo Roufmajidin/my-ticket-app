@@ -48,7 +48,7 @@ export default {
       <div class="col-xl-12">
         <section class="hk-sec-wrapper">
           <h5 class="hk-sec-title">
-            <span class="subheader">Detail Pengguna {{ user.user?.name }}</span>
+            <!-- <span class="subheader">Detail Pengguna {{ user.user?.name }}</span> -->
           </h5>
 
           <div class="row">
@@ -62,46 +62,29 @@ export default {
                       <th>Created</th>
                       <th>Seats</th>
                       <th>Studio</th>
-                      <th>Tayang</th>
                       <th>payment</th>
                       <!-- <th>Qr</th> -->
                       <th>More</th>
                     </tr>
                   </thead>
-                  <tbody v-if="user.data_booking != []">
+                  <tbody v-if="user != []">
 
-                    <tr v-for="(item, index) in user.data_booking" :key="index">
+                    <tr v-for="(item, index) in user" :key="index">
                       <td>{{ index + 1 }}</td>
 
                       <td>{{ item.booking_date }}</td>
-                      <td>
-                        <span v-for="(i, idx) in item.bookings" :key="idx">
-                          <li href="">{{ i.seat.row }} {{ i.seat.number }}</li>
+                      <td>{{ item.bookings.length }} seats</td>
+                      <td>{{ item.method.name }}</td>
+                      <td>{{ item.order.status == 0 ? "Pending" : "Sukses" }}</td>
 
-                        </span>
-                      </td>
-                      <!-- <td> -->
-                      <td>
-                        <span v-for="(i, idx) in item.bookings" :key="idx">
-                          <li href="">{{ i.waktu.studio.name }}</li>
+                      <!-- <td>
+                        <vue-qrcode class="qr-code" v-if="item.qr_code" :value="item.qr_code"
+                          :options="{ width: 300, scale: 20, type: 'image/png' }"></vue-qrcode>
 
-                        </span>
-                      </td>
-                      <td>
-                        <span v-for="(i, idx) in item.bookings" :key="idx">
-                          <li href="">{{ formattgl(i.waktu.tayang.time) }}</li>
-                          <!-- <td>
-                        <vue-qrcode class="qr-code" v-if="i.qr_code" :value="i.qr_code"
-                          :options="{ width: 160 }"></vue-qrcode>
-                        <p>{{ i.qr_code }}</p>
                       </td> -->
-                        </span>
-                      </td>
-                      <td>sukses</td>
 
                       <td>
-                        <button type="button" class="btn btn-info mr-2"
-                          @click="openEditPanel(index, user.data_booking[index])">
+                        <button type="button" class="btn btn-info mr-2" @click="openEditPanel(index, item)">
                           <i class=" zmdi
                           zmdi-eye font-18"></i>
                         </button>
@@ -111,7 +94,7 @@ export default {
                   </tbody>
 
 
-                  <tbody style="margin-left: 100px;" v-if="user.data_booking == 0">Not yet Bookingan</tbody>
+                  <tbody style="margin-left: 100px;" v-if="user == 0">Not yet Bookingan</tbody>
 
                 </table>
                 <!-- open panel pinggir samping-->
@@ -130,27 +113,31 @@ export default {
 
                     </div>
 
+                    <!-- side comp -->
+                    <div v-if="data.bookings && data.bookings.length > 0" class="booking-container">
+                      <div class="qr-container" v-if="data.qr_code">
+                        <vue-qrcode class="qr-code" :value="data.qr_code"
+                          :options="{ width: 200, scale: 20, type: 'image/png' }"></vue-qrcode>
+                      </div>
 
-                    <div v-if="data.bookings && data.bookings.length > 0">
-                      <div v-for="(booking, index) in data.bookings" :key="index" class="booking-item">
-                        <div class="qr-container">
-                          <vue-qrcode class="qr-code" v-if="booking.qr_code" :value="booking.qr_code"
-                            :options="{ width: 300, scale: 20, type: 'image/png' }"></vue-qrcode>
-
-                        </div>
-                        <div class="booking-info">
-                          <h3>Booking #{{ index + 1 }}</h3>
-                          <p><strong>Dibuat:</strong> {{ formattgl(booking.booking_date) }}</p>
-                          <p><strong>Movie Name:</strong> {{ booking.movie.judul }}</p>
-                          <p><strong>Harga:</strong> {{ booking.movie.harga }}</p>
-                          <p><strong>Method Payment:</strong> {{ booking.method_payment }}</p>
-                          <p><strong>Seat:</strong> {{ booking.seat.row }}{{ booking.seat.number }}</p>
-                          <p><strong>Tanggal Tayang:</strong> {{ formattgl(booking.waktu.tayang.time) }}</p>
-
-
+                      <div class="booking-content">
+                        <h3>Booking Details</h3>
+                        <div class="booking-list">
+                          <p v-for="(booking, index) in data.bookings" :key="index">
+                            {{ booking.number }} {{ booking.row }}
+                            <br>
+                            {{ formattgl(booking.waktu.time) }}
+                            <br>
+                            {{ booking.waktu.movie.judul }}
+                            (<span style="font-size:12px">{{ booking.waktu.room.name }}</span>) |
+                            <strong>Price:</strong> {{ booking.waktu.movie.harga }}
+                            <hr>
+                          </p>
                         </div>
                       </div>
                     </div>
+
+
                   </div>
                 </div>
               </div>
@@ -181,8 +168,8 @@ export default {
 .hk-settings-panel {
   position: fixed;
   top: 60px;
-  right: -480px;
-  width: 480px;
+  right: -500px;
+  width: 500px;
   overflow-y: scroll;
   height: 80%;
   background-color: white;
@@ -209,28 +196,31 @@ export default {
   font-size: 20px;
 }
 
-/* booking in */
-.booking-item {
+.booking-container {
   display: flex;
   align-items: center;
-  background: #f8f9fa;
-  padding: 15px;
-  margin-bottom: 15px;
-  border-radius: 5px;
-  border: 1px solid #ddd;
+  gap: 20px;
 }
 
 .qr-container {
-  flex: 0 60px;
-  margin-right: 15px;
+  flex-shrink: 0;
+  /* QR tidak mengecil */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .qr-code {
-  width: 60px;
-  height: 60px;
+  max-width: 200px;
 }
 
-.booking-info {
+.booking-content {
   flex: 1;
+}
+
+.booking-list {
+  background: #f5f5f5;
+  padding: 15px;
+  border-radius: 8px;
 }
 </style>

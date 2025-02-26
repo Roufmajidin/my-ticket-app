@@ -12,13 +12,13 @@ import { useRoute } from "vue-router";
 import { QrcodeStream } from 'vue-qrcode-reader'
 
 export default {
+  name: "usersVi",
   components: {
     QrcodeStream,
   },
 
   setup() {
     // const QrcodeStream = defineAsyncComponent(() => import("vue-qrcode-stream"));
-    // const result = ref("Belum ada hasil scan");
 
     //
     const route = useRoute()
@@ -108,7 +108,7 @@ export default {
                       </p>
                       Scanner :
                       <!-- <QrcodeStream v-if="isScan" @decode="onDecode" @init="onError" /> -->
-                      <QrcodeStream v-show="isScan" @detect="onDecode" @init="onError" />
+                      <QrcodeStream v-if="isScan == true" @detect="onDecode" @init="onError" />
 
                       <p v-if="result">Hasil Scan: {{ result[0]?.rawValue }}</p>
                       <p>Hasil Scan: {{ infow }}</p>
