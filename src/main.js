@@ -17,6 +17,7 @@ import '@/assets/vendors/datatables.net-dt/css/jquery.dataTables.min.css'
 import '@/assets/vendors/datatables.net-responsive-dt/css/responsive.dataTables.min.css'
 import '@/assets/vendors/jquery-toggles/css/toggles.css'
 import '@/assets/vendors/jquery-toggles/css/themes/toggles-light.css'
+
 const loads = (src) => {
   return new Promise((resolve, reject) => {
     const script = document.createElement('script');
@@ -28,6 +29,8 @@ const loads = (src) => {
   });
 };
 const app = createApp(App);
+// app.config.devtools = false;
+
 export const piniaInstance = createPinia()
 
 app.use(router);

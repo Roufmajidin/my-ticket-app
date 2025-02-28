@@ -236,7 +236,7 @@ export default {
                             <button id="" v-on:click=" addevent()" class="btn btn-info ml-1 ">{{
 
                               'Add event'
-                              }}</button>
+                            }}</button>
                           </div>
 
                           <div class="dd" v-if="info['status'] == 'success'">
@@ -244,7 +244,7 @@ export default {
                             <button id="" v-on:click=" saveevent()" class="btn btn-info ml-1 ">{{
 
                               'save event'
-                              }}</button>
+                            }}</button>
                           </div>
 
                           <div class="fs ml-6 p-4" v-if="isaddevent == true">
@@ -320,7 +320,8 @@ export default {
                         <div v-for="(movie, index) in movieDates" :key="index" class="alert alert-success" role="alert"
                           @click="toggleSeats(movie)" style="cursor: pointer;">
 
-                          {{ formatDate(movie.waktu) }}
+                          <!-- {{ formatDate(movie.waktu) }} -->
+                          {{ movie.id }}
                           <br>
                           <span style="font-size: 16px;color: blue;">
 
@@ -328,30 +329,28 @@ export default {
                           </span>
                           {{ formattgl(movie.waktu) }}
 
-                          <i style="font-size: 18px;" class="zmdi zmdi-airline-seat-recline-normal ml-2 mr-4"
-                            v-if="expandedMovieId[movie.id]">{{
-                              seats.length }} seat</i>
-                          <i class=" zmdi "
-                            :class="expandedMovieId[movie.id] ? 'zmdi-chevron-down' : 'zmdi-chevron-right'">
-
+                          <i class="zmdi zmdi-airline-seat-recline-normal ml-2 mr-4"
+                            v-if="expandedMovieId === movie.id">
+                            {{ getSeatsForMovie(movie.id).value.length }} seat
                           </i>
                           <div class=" d-flex flex-wrap" v-if="expandedMovieId === movie.id">
-                            <template v-for="(seats, row) in groupedSeats" :key="row">
 
-                              <div class="d-flex align-items-center">
-                                <span class="font-weight-bold me-2" style="margin: 2px">{{ row }} </span>
-                                <div class="d-flex flex-wrap">
-                                  <button v-for="seat in seats" :key="seat.id" type="button"
-                                    style="margin: 4px;height: 30px;width: 30px;" :class="{
-                                      'btn btn-secondary': seat.Booking.length === 0,
-                                      'btn btn-primary': seat.Booking.length > 0
-                                    }">
-                                    {{ seat.number }}
-                                  </button>
-                                </div>
-                              </div>
-                            </template>
                           </div>
+                          <template v-for="(seats, row) in groupedSeatsForMovie(movie.id).value" :key="row">
+                            <div class="d-flex align-items-center">
+                              <span class="font-weight-bold me-2" style="margin: 2px">{{ row }} </span>
+                              <div class="d-flex flex-wrap">
+                                <button v-for="seat in seats" :key="seat.id" type="button" data-toggle="tooltip-info"
+                                  data-placement="right" :title="seat.id" style="margin: 4px;height: 30px;width: 30px;"
+                                  :class="{
+                                    'btn btn-secondary': !seat.isBooked,
+                                    'btn btn-primary': seat.isBooked
+                                  }" @mousedown="copyToClipboard(seat.id)">
+                                  {{ seat.number }}
+                                </button>
+                              </div>
+                            </div>
+                          </template>
                         </div>
                         <!-- <div class="d-flex align-items-center flex-wrap" v-if="selectedMovie.studio.length">
                           <div v-for="(studio, index) in selectedMovie.studio" :key="index"

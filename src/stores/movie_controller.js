@@ -33,6 +33,8 @@ export function useMovie() {
   const info = ref([]);
   const selectedRoom = ref(0);
   const indexing = ref(0);
+  const seatsMap = ref({}); // Menyimpan seat berdasarkan movie.id
+
   const selectedMovie = ref({
     movie_name: "",
     idm: "",
@@ -263,13 +265,18 @@ export function useMovie() {
     // toggleSeats(movieId)
   };
 
-  const groupedSeats = computed(() => {
-    return seats.value.reduce((acc, seat) => {
-      if (!acc[seat.row]) acc[seat.row] = [];
-      acc[seat.row].push(seat);
-      return acc;
-    }, {});
-  });
+  const groupedSeatsForMovie = (movieId) => {
+    return computed(() => {
+      const movieSeats = seatsMap.value[movieId] || []; // Ambil kursi sesuai movieId
+      if (!movieSeats.length) return {};
+
+      return movieSeats.reduce((acc, seat) => {
+        if (!acc[seat.row]) acc[seat.row] = [];
+        acc[seat.row].push(seat);
+        return acc;
+      }, {});
+    });
+  };
 
   const formatWIB = (time) => {
     return dayjs(time).format("DD/MM/YYYY HH:mm");
@@ -484,13 +491,29 @@ export function useMovie() {
       `${currentYear.value}-${String(currentMonth.value+1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
     return hasEvent.value.includes(formattedDate);
   };
-  const toggleSeats = (movie) => {
+  const toggleSeats = async (movie) => {
+    const a = {
+      'waktu': movie.id,
+      "room": movie.room_id,
+    }
+    const response = await fetch(`${baseurl}/movies/seats/${a.room}/${a.waktu}`);
+    const data = await response.json();
+    seatsMap.value[movie.id] = data.data.seat_status;
+
+    expandedMovieId.value = expandedMovieId.value === movie.id ? null : movie.id;
+
+
+    console.log("Updated seats in state:", seats.value);
+
+    // alert(seats.value)
+
+    console.log('id', expandedMovieId.value)
     if (expandedMovieId.value === movie.id) {
       expandedMovieId.value = null;
       selectedMovie.value.selectedStudios.value = [];
     } else {
       expandedMovieId.value = movie.id;
-      setSelectedDate(movie.waktu, movie.room_id, movie.id);
+      // setSelectedDate(movie.waktu, movie.room_id, movie.id);
     }
   }
   // format waktu input form
@@ -671,9 +694,17 @@ export function useMovie() {
       hour12: false, // Format 24 jam
     });
   }
+  const getSeatsForMovie = (movieId) => {
+    return computed(() => seatsMap.value[movieId] || []);
+  };
 
-
-
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text).then(() => {
+      alert(`Seat ID ${text} copied!`);
+    }).catch(err => {
+      console.error("Failed to copy: ", err);
+    });
+  };
 
 
   return {
@@ -686,7 +717,9 @@ export function useMovie() {
     formatWIB,
     showSeat,
     seats,
-    groupedSeats,
+    groupedSeatsForMovie,
+    getSeatsForMovie,
+    copyToClipboard,
     openEditPanel,
     closeEditPanel,
     isPanelOpen,
@@ -741,7 +774,8 @@ export function useMovie() {
     room,
     filteringdata,
     info,
-    indexing
+    indexing,
+    seatsMap
 
   };
 }

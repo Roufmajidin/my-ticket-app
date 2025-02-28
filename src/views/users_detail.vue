@@ -115,22 +115,25 @@ export default {
 
                     <!-- side comp -->
                     <div v-if="data.bookings && data.bookings.length > 0" class="booking-container">
-                      <div class="qr-container" v-if="data.qr_code">
+                      <!-- <div class="qr-container" v-if="data.qr_code">
                         <vue-qrcode class="qr-code" :value="data.qr_code"
                           :options="{ width: 200, scale: 20, type: 'image/png' }"></vue-qrcode>
-                      </div>
+                      </div> -->
 
                       <div class="booking-content">
                         <h3>Booking Details</h3>
                         <div class="booking-list">
                           <p v-for="(booking, index) in data.bookings" :key="index">
                             {{ booking.number }} {{ booking.row }}
+                            <br> id {{ booking.id }}
                             <br>
                             {{ formattgl(booking.waktu.time) }}
                             <br>
                             {{ booking.waktu.movie.judul }}
                             (<span style="font-size:12px">{{ booking.waktu.room.name }}</span>) |
-                            <strong>Price:</strong> {{ booking.waktu.movie.harga }}
+                            <!-- <strong>Price:</strong> {{ booking.waktu.movie.harga }} -->
+                            roomid {{ booking.waktu.room.id }}
+                            waktuid {{ booking.waktu.id }}
                             <hr>
                           </p>
                         </div>
