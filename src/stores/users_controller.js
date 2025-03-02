@@ -29,6 +29,7 @@ export function useUsers() {
       const res = await fetch(baseurl + "movies/users");
       const data = await res.json();
       users.value = data.data;
+
       console.log(users)
 
     } catch (error) {
@@ -59,6 +60,7 @@ export function useUsers() {
     const res = await fetch(baseurl + "movies/users/" + id)
     const data = await res.json();
     console.log('hhak', data.data)
+
     return data.data;
   }
   // open panel

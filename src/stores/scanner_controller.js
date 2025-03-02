@@ -49,6 +49,10 @@ export function useScanner() {
 
   }
   const onDecode = async (text) => {
+    // if (text.length === 0) return; // Jika tidak ada QR code, abaikan
+
+    const scannedText = text[0].rawValue;
+    if (!scannedText) return;
     result.value = text;
     // alert(result.value[0].rawValue);
     // console.log("value", result.value)
@@ -64,6 +68,9 @@ export function useScanner() {
     })
     const datar = await respon.json();
     infow.value = datar.data
+    // result.value.push(datar.data); // Simpan hasil scan ke array
+
+
     // alert(message.value)
     // console.log(respon.body)
     // if(respon.ok === tr){

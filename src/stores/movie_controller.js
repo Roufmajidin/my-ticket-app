@@ -7,6 +7,9 @@ import {
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import {
+  io
+} from "socket.io-client";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -34,6 +37,9 @@ export function useMovie() {
   const selectedRoom = ref(0);
   const indexing = ref(0);
   const seatsMap = ref({}); // Menyimpan seat berdasarkan movie.id
+  const socket = io("http://localhost:4000"); // Sesuaikan dengan alamat backend
+  const movieBookings = ref([]);
+
 
   const selectedMovie = ref({
     movie_name: "",
@@ -434,7 +440,11 @@ export function useMovie() {
     showMonthList.value = false;
   };
   onMounted(() => {
-
+    socket.on("newBooking", (booking) => {
+      console.log("Booking Baru Diterima:", booking);
+      // alert(`Booking baru oleh user ${booking.user} pada ${booking.booking_date}`);
+      movieBookings.value.push(booking);
+    });
     fetchMovie();
     watch(movieDates, () => {
       console.log("movieDates updated, recalculating events...");
@@ -508,13 +518,13 @@ export function useMovie() {
     // alert(seats.value)
 
     console.log('id', expandedMovieId.value)
-    if (expandedMovieId.value === movie.id) {
-      expandedMovieId.value = null;
-      selectedMovie.value.selectedStudios.value = [];
-    } else {
-      expandedMovieId.value = movie.id;
-      // setSelectedDate(movie.waktu, movie.room_id, movie.id);
-    }
+    // if (expandedMovieId.value === movie.id) {
+    //   expandedMovieId.value = null;
+    //   selectedMovie.value.selectedStudios.value = [];
+    // } else {
+    //   expandedMovieId.value = movie.id;
+    //   // setSelectedDate(movie.waktu, movie.room_id, movie.id);
+    // }
   }
   // format waktu input form
   const formatDateTime = (dateString) => {
@@ -775,7 +785,8 @@ export function useMovie() {
     filteringdata,
     info,
     indexing,
-    seatsMap
+    seatsMap,
+    movieBookings,
 
   };
 }

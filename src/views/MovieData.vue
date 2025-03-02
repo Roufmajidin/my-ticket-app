@@ -22,6 +22,10 @@ export default {
     <div class="row">
       <div class="col-xl-12">
         <section class="hk-sec-wrapper">
+          <div style="width: 390px;" class="alert alert-warning ml-1" role="alert">
+            {{ movieBookings.length === 0 ? "Belum ada booking terbaru." : "Ada booking baru!" }}
+          </div>
+
           <h5 class="hk-sec-title">Movie Bank</h5>
           <p class="mb-40">Data Movie <a href="https://datatables.net/reference/option/" target="_blank">View all
               options</a>.</p>
@@ -331,26 +335,27 @@ export default {
 
                           <i class="zmdi zmdi-airline-seat-recline-normal ml-2 mr-4"
                             v-if="expandedMovieId === movie.id">
-                            {{ getSeatsForMovie(movie.id).value.length }} seat
+                            <!-- {{ getSeatsForMovie(movie.id).value.length }} seat -->
                           </i>
-                          <div class=" d-flex flex-wrap" v-if="expandedMovieId === movie.id">
+                          <div class=" d-flex flex-wrap" v-if="expandedMovieId == movie.id">
 
-                          </div>
-                          <template v-for="(seats, row) in groupedSeatsForMovie(movie.id).value" :key="row">
-                            <div class="d-flex align-items-center">
-                              <span class="font-weight-bold me-2" style="margin: 2px">{{ row }} </span>
-                              <div class="d-flex flex-wrap">
-                                <button v-for="seat in seats" :key="seat.id" type="button" data-toggle="tooltip-info"
-                                  data-placement="right" :title="seat.id" style="margin: 4px;height: 30px;width: 30px;"
-                                  :class="{
-                                    'btn btn-secondary': !seat.isBooked,
-                                    'btn btn-primary': seat.isBooked
-                                  }" @mousedown="copyToClipboard(seat.id)">
-                                  {{ seat.number }}
-                                </button>
+                            <template v-for="(seats, row) in groupedSeatsForMovie(movie.id).value" :key="row">
+                              <div class="d-flex align-items-center">
+                                <span class="font-weight-bold me-2" style="margin: 2px">{{ row }} </span>
+                                <div class="d-flex flex-wrap">
+                                  <button v-for="seat in seats" :key="seat.id" type="button" data-toggle="tooltip-info"
+                                    data-placement="right" :title="seat.id"
+                                    style="margin: 4px;height: 30px;width: 30px;" :class="{
+                                      'btn btn-secondary': !seat.isBooked,
+                                      'btn btn-primary': seat.isBooked
+                                    }" @mousedown="copyToClipboard(seat.id)">
+                                    {{ seat.number }}
+                                  </button>
+                                </div>
                               </div>
-                            </div>
-                          </template>
+                            </template>
+                          </div>
+
                         </div>
                         <!-- <div class="d-flex align-items-center flex-wrap" v-if="selectedMovie.studio.length">
                           <div v-for="(studio, index) in selectedMovie.studio" :key="index"

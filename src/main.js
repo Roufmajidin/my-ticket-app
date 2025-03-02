@@ -18,6 +18,15 @@ import '@/assets/vendors/datatables.net-responsive-dt/css/responsive.dataTables.
 import '@/assets/vendors/jquery-toggles/css/toggles.css'
 import '@/assets/vendors/jquery-toggles/css/themes/toggles-light.css'
 
+import {
+  io
+} from "socket.io-client";
+const socket = io("http://localhost:4000"); // Sesuaikan dengan alamat backend
+
+socket.on("connect", () => {
+  console.log("Connected to Socket.io server");
+});
+
 const loads = (src) => {
   return new Promise((resolve, reject) => {
     const script = document.createElement('script');
@@ -29,9 +38,10 @@ const loads = (src) => {
   });
 };
 const app = createApp(App);
-// app.config.devtools = false;
 
 export const piniaInstance = createPinia()
+app.config.globalProperties.$socket = socket; // Simpan socket agar bisa diakses di seluruh komponen
+// app.use(VueQrcodeReader)
 
 app.use(router);
 Promise.all([

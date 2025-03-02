@@ -5,7 +5,7 @@ import timezone from "dayjs/plugin/timezone";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 import { useUsers } from "@/stores/users_controller";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watchEffect, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 import VueQrcode from "@chenfengyuan/vue-qrcode";
 
@@ -15,6 +15,8 @@ export default {
     VueQrcode,
   },
   setup() {
+    let intervalId;
+
     // console.log("ok")
     // return useUsers;
     const route = useRoute()
@@ -25,8 +27,25 @@ export default {
       // return
       user.value = await getUserId(route.params.id)
       console.log("User Data:", user.value);
+      intervalId = setInterval(async () => {
+        user.value = await getUserId(route.params.id);
+        // openEditPanel(indexing, user.value.data)
+        // closePanel
+      }, 2000);
+
 
     })
+    // 🚀 Watch perubahan `user.value` untuk update panel
+    // watchEffect(() => {
+    //   if (isPanel.value && user.value.length > 0) {
+    //     openEditPanel(indexing.value, user.value);
+    //   }
+    // });
+    onUnmounted(() => {
+      clearInterval(intervalId);
+    });
+
+
 
     return { user, formatDate, isPanel, indexing, data, closePanel, openEditPanel, formattgl };
 
@@ -115,12 +134,12 @@ export default {
 
                     <!-- side comp -->
                     <div v-if="data.bookings && data.bookings.length > 0" class="booking-container">
-                      <!-- <div class="qr-container" v-if="data.qr_code">
+                      <div class="qr-container" v-if="data.qr_code">
                         <vue-qrcode class="qr-code" :value="data.qr_code"
                           :options="{ width: 200, scale: 20, type: 'image/png' }"></vue-qrcode>
-                      </div> -->
-
-                      <div class="booking-content">
+                      </div>
+                      <!-- data.expired harusnya struktur datanya = -->
+                      <div v-if="user[indexing].expired == 1" class="booking-content">
                         <h3>Booking Details</h3>
                         <div class="booking-list">
                           <p v-for="(booking, index) in data.bookings" :key="index">

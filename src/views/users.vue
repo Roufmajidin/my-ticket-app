@@ -9,12 +9,15 @@ import { useUsers } from "@/stores/users_controller";
 import { useScanner } from "@/stores/scanner_controller";
 import { useRoute } from "vue-router";
 // import { QrcodeStream } from "vue-barcode-reader";
-import { QrcodeStream } from 'vue-qrcode-reader'
+// import { QrcodeStream } from 'vue-qrcode-reader'
+import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from 'vue-qrcode-reader'
 
 export default {
-  name: "usersVi",
+  // name: "usersVi",
   components: {
     QrcodeStream,
+    QrcodeDropZone,
+    QrcodeCapture
   },
 
   setup() {
@@ -36,7 +39,9 @@ export default {
       closePanel,
       isPanel,
       onDecode, onError, result,
-      QrcodeStream, infow
+      QrcodeStream, infow,
+      QrcodeDropZone,
+      QrcodeCapture
 
     };
 
@@ -53,7 +58,7 @@ export default {
       <div class="col-xl-12">
         <section class="hk-sec-wrapper">
           <h5 class="hk-sec-title">All Users</h5>
-          <button v-if="isScan == true" id="" v-on:click="openEditPanel()" class="btn btn-primary mt-30">Scanner
+          <button v-if="isScan === true" id="" v-on:click="openEditPanel()" class="btn btn-primary mt-30">Scanner
           </button>
           <div class="row">
             <div class="col-sm">
@@ -106,6 +111,8 @@ export default {
                       <p class="font-14">
 
                       </p>
+                      <!-- <QrcodeStream :constraints="{ video: { facingMode: 'environment' } }" /> -->
+
                       Scanner :
                       <!-- <QrcodeStream v-if="isScan" @decode="onDecode" @init="onError" /> -->
                       <QrcodeStream v-if="isScan == true" @detect="onDecode" @init="onError" />
