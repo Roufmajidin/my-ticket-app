@@ -45,24 +45,24 @@ app.config.globalProperties.$socket = socket; // Simpan socket agar bisa diakses
 
 app.use(router);
 Promise.all([
-    loads('/vendors/jquery/dist/jquery.min.js'),
+    // loads('/vendors/jquery/dist/jquery.min.js'),
     loads('/vendors/popper.js/dist/umd/popper.min.js'),
     loads('/vendors/bootstrap/dist/js/bootstrap.min.js'),
     loads('/dist/js/jquery.slimscroll.js'),
     loads('/dist/js/dropdown-bootstrap-extended.js'),
-    loads('/dist/js/feather.min.js'),
+    // loads('/dist/js/feather.min.js'),
     loads('/vendors/jquery-toggles/toggles.min.js'),
     loads('/dist/js/toggle-data.js'),
     loads('/vendors/waypoints/lib/jquery.waypoints.min.js'),
     loads('/vendors/jquery.counterup/jquery.counterup.min.js'),
     loads('/vendors/raphael/raphael.min.js'),
     loads('/vendors/morris.js/morris.min.js'),
-    loads('/vendors/echarts/dist/echarts-en.min.js'),
+    // loads('/vendors/echarts/dist/echarts-en.min.js'),
     loads('/vendors/jquery.sparkline/dist/jquery.sparkline.min.js'),
     // loads('/vendors/vectormap/jquery-jvectormap-2.0.3.min.js'),
     // loads('/vendors/vectormap/jquery-jvectormap-world-mill-en.js'),
     loads('/dist/js/vectormap-data.js'),
-    loads('/vendors/owl.carousel/dist/owl.carousel.min.js'),
+    // loads('/vendors/owl.carousel/dist/owl.carousel.min.js'),
     loads('/vendors/jquery-toast-plugin/dist/jquery.toast.min.js'),
     loads('/dist/js/init.js'),
     // loads('/dist/js/dashboard-data.js')

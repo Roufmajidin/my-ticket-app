@@ -39,7 +39,10 @@ export function useMovie() {
   const seatsMap = ref({}); // Menyimpan seat berdasarkan movie.id
   const socket = io("http://localhost:4000"); // Sesuaikan dengan alamat backend
   const movieBookings = ref([]);
-
+  // paginasi
+  const currentPage = ref(1)
+  const totalPage = ref(1)
+  const loading = ref(false)
 
   const selectedMovie = ref({
     movie_name: "",
@@ -288,14 +291,22 @@ export function useMovie() {
     return dayjs(time).format("DD/MM/YYYY HH:mm");
   };
 
-  const fetchMovie = async () => {
+  const fetchMovie = async (page = 1) => {
     try {
-      const response = await fetch(baseurl + "/movies/movies");
+      if (page < 1 || page > totalPage.value) return;
+
+      loading.value = true;
+
+      const response = await fetch(baseurl + "/movies/movies?page=" + page + "&limit=4");
       const data = await response.json();
       console.log("Fetched Data:", data);
 
-      movie.value = data;
+      movie.value = data.movies;
+      currentPage.value = data.current_page
+      totalPage.value = data.total_pages
       // movieDates.value = data;
+      loading.value = false;
+
       console.log(movie.value)
     } catch (error) {
       console.error("Error fetching movies:", error);
@@ -718,6 +729,7 @@ export function useMovie() {
 
 
   return {
+    fetchMovie,
     formattgl,
     apani,
     formatedf,
@@ -787,6 +799,9 @@ export function useMovie() {
     indexing,
     seatsMap,
     movieBookings,
-
+    // paginasi
+    totalPage,
+    currentPage,
+    loading
   };
 }

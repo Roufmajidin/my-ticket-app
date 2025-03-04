@@ -91,7 +91,7 @@ export default {
                     <tr v-for="(item, index) in user" :key="index">
                       <td>{{ index + 1 }}</td>
 
-                      <td>{{ item.booking_date }}</td>
+                      <td>{{ formatDate(item.booking_date) }}</td>
                       <td>{{ item.bookings.length }} seats</td>
                       <td>{{ item.method.name }}</td>
                       <td>{{ item.order.status == 0 ? "Pending" : "Sukses" }}</td>
@@ -142,7 +142,7 @@ export default {
                       <div v-if="user[indexing].expired == 1" class="booking-content">
                         <h3>Booking Details</h3>
                         <div class="booking-list">
-                          <p v-for="(booking, index) in data.bookings" :key="index">
+                          <h5 v-for="(booking, index) in data.bookings" :key="index">
                             {{ booking.number }} {{ booking.row }}
                             <br> id {{ booking.id }}
                             <br>
@@ -154,7 +154,7 @@ export default {
                             roomid {{ booking.waktu.room.id }}
                             waktuid {{ booking.waktu.id }}
                             <hr>
-                          </p>
+                          </h5>
                         </div>
                       </div>
                     </div>
@@ -188,10 +188,12 @@ export default {
 }
 
 .hk-settings-panel {
+  border-bottom-left-radius: 20px;
+  border-top-left-radius: 20px;
   position: fixed;
   top: 60px;
-  right: -500px;
-  width: 500px;
+  right: -800px;
+  width: 800px;
   overflow-y: scroll;
   height: 80%;
   background-color: white;

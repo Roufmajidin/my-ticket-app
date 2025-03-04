@@ -28,8 +28,8 @@ export default {
     const isScan = computed(() => route.query.isScan === "true");
 
     console.log("ini", { isScan: isScan.value });
-    const { users, formatDate } = useUsers();
-    const { isPanel, openEditPanel, closePanel, onDecode, onError, result, infow } = useScanner();
+    const { users, formatDate, loading, currentPage, totalPage, getUsers } = useUsers();
+    const { isPanel, openEditPanel, closePanel, onDecode, onError, result, infow, } = useScanner();
 
     return {
       users,
@@ -41,7 +41,8 @@ export default {
       onDecode, onError, result,
       QrcodeStream, infow,
       QrcodeDropZone,
-      QrcodeCapture
+      QrcodeCapture,
+      loading, currentPage, totalPage, getUsers
 
     };
 
@@ -57,9 +58,20 @@ export default {
     <div class="row">
       <div class="col-xl-12">
         <section class="hk-sec-wrapper">
-          <h5 class="hk-sec-title">All Users</h5>
-          <button v-if="isScan === true" id="" v-on:click="openEditPanel()" class="btn btn-primary mt-30">Scanner
-          </button>
+          <div class="hk-pg-header mb-10">
+            <div>
+              <h4 class="hk-pg-title"><span class="pg-title-icon"><span class="feather-icon"><i
+                      data-feather="book"></i></span></span>Users</h4>
+            </div>
+            <div class="d-flex">
+              <a href="#" class="text-secondary mr-15"><span class="feather-icon"><i
+                    data-feather="printer"></i></span></a>
+              <a href="#" class="text-secondary mr-15"><span class="feather-icon"><i
+                    data-feather="download"></i></span></a>
+              <button v-if="isScan === true" id="" v-on:click="openEditPanel()"
+                class="btn btn-primary btn-sm">Scanner</button>
+            </div>
+          </div>
           <div class="row">
             <div class="col-sm">
               <div class="table-wrap">
@@ -97,6 +109,28 @@ export default {
                   </tbody>
 
                 </table>
+                <!-- paginasi -->
+                <div class="row">
+                  <div class="col-sm">
+                    <nav class="pagination-wrap d-inline-block mr-40 mt-30" aria-label="Page navigation example">
+                      <ul class="pagination custom-pagination pagination-filled">
+                        <li @click="getUsers(currentPage - 1)" :class="{ 'disabled': currentPage === 1 }"
+                          class="page-item">
+                          <a class="page-link" href="#"><i class="ion ion-ios-arrow-round-back"></i></a>
+                        </li>
+                        <li v-for="page in totalPage" :key="page" @click="getUsers(page)"
+                          :class="{ 'active': currentPage === page }" class="page-item">
+                          <a class="page-link" href="#">{{ page }}</a>
+                        </li>
+                        <li @click="getUsers(currentPage + 1)" :class="{ 'disabled': currentPage === totalPage }"
+                          class="page-item">
+                          <a class="page-link" href="#"><i class="ion ion-ios-arrow-round-forward"></i></a>
+                        </li>
+                      </ul>
+                    </nav>
+
+                  </div>
+                </div>
                 <!-- side comp -->
                 <div class="hk-settings-panel" :class="{ active: isPanel }">
 

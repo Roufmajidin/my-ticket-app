@@ -35,6 +35,8 @@ export default {
                 <button id="" v-on:click="addMovie()" class="btn btn-primary mt-30">Add movie data
                 </button>
                 <table id="datable_1" class="table table-hover w-100 display pb-30">
+                  <div v-if="loading" class="text-center">Loading...</div>
+
                   <thead>
                     <tr>
                       <th>#</th>
@@ -94,6 +96,28 @@ export default {
                   </tbody>
 
                 </table>
+                <!-- paginasi -->
+                <div class="row">
+                  <div class="col-sm">
+                    <nav class="pagination-wrap d-inline-block mr-40 mt-30" aria-label="Page navigation example">
+                      <ul class="pagination custom-pagination pagination-filled">
+                        <li @click="fetchMovie(currentPage - 1)" :class="{ 'disabled': currentPage === 1 }"
+                          class="page-item">
+                          <a class="page-link" href="#"><i class="ion ion-ios-arrow-round-back"></i></a>
+                        </li>
+                        <li v-for="page in totalPage" :key="page" @click="fetchMovie(page)"
+                          :class="{ 'active': currentPage === page }" class="page-item">
+                          <a class="page-link" href="#">{{ page }}</a>
+                        </li>
+                        <li @click="fetchMovie(currentPage + 1)" :class="{ 'disabled': currentPage === totalPage }"
+                          class="page-item">
+                          <a class="page-link" href="#"><i class="ion ion-ios-arrow-round-forward"></i></a>
+                        </li>
+                      </ul>
+                    </nav>
+
+                  </div>
+                </div>
                 <div class="hk-settings-panel" :class="{ active: isPanelOpen ?? isPanelOpenSeat }">
 
                   <div class="nicescsroll-bar">
@@ -167,28 +191,26 @@ export default {
                             <label>actor utama</label>
                             <input type="text" class="form-control" v-model="selectedMovie.actor_u">
                           </div>
-                          <div class="form-group">
+                          <!-- <div class="form-group">
                             <label>studio</label>
 
-                            <!-- <select v-if="modeForm === 'add'" class="form-control" v-model="selectedMovie.studio">
+                            <select v-if="modeForm === 'add'" class="form-control" v-model="selectedMovie.studio">
 
                               <option v-for="studio in canSeat" :key="studio.id" :value="studio.name"
                                 :disabled="studio.can_generate_seat">
                                 {{ studio.name }}
                                 {{ studio.can_generate_seat != true ? '(Sudah terisi movie)' : '' }}
                               </option>
-                            </select> -->
+                            </select>
 
 
 
-                            <!-- Jika mode edit, tampilkan input text -->
-                            <!-- <input v-else type="text" class="form-control" v-model="selectedMovie.studio"> -->
-                            <div class="d-flex align-items-center flex-wrap" v-if="selectedMovie.studio.length">
+                              <div class="d-flex align-items-center flex-wrap" v-if="selectedMovie.studio.length">
                               <div v-for="(studio, index) in selectedMovie.studio" :key="index"
                                 class="d-flex align-items-center m-2">
 
                                 <!-- Tombol Studio -->
-                                <div class="fs d-flex align-items-center flex-wrap mr-1">
+                          <!-- <div class="fs d-flex align-items-center flex-wrap mr-1">
                                   <button class="btn btn-primary  mr-1">
                                     {{ studio.nameStudio }}
                                     {{ studio.waktu }}
@@ -197,23 +219,22 @@ export default {
                                     <input type="datetime-local" class="form-control" v-model="formattedWaktuLocal"
                                       @input="updateWaktu" />
                                   </div>
-                                </div>
+                                </div> -->
 
-                                <div class="custom-control custom-checkbox">
+                          <!-- <div class="custom-control custom-checkbox">
                                   <input type="checkbox" class="custom-control-input" :id="'customCheck' + index"
                                     @change="toggleStudioSelection($event, studio.id, movie)"
                                     :checked="studio.status === 1 || selectedMovie.selectedStudios.includes(studio.id)">
                                   <label class="custom-control-label" :for="'customCheck' + index">
                                     {{ studio.status == 0 ? "SL" : "Idle" }}
                                   </label>
-                                </div>
+                                </div> -->
 
-                              </div>
-                            </div>
+                          <!-- </div> -->
+                          <!-- </div> -->
 
 
-                            <p>Selected Studios: {{ selectedMovie.selectedStudios }}</p>
-                          </div>
+                          <!-- <p>Selected Studios: {{ selectedMovie.selectedStudios }}</p> -->
                           <div class="form-group">
                             <label>durasi</label>
                             <input type="text" class="form-control" v-model="selectedMovie.durasi">
