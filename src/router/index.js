@@ -6,6 +6,7 @@ import {
 import MovieData from '../views/MovieData.vue'
 import users from '../views/users.vue'
 import users_detail from '../views/users_detail.vue'
+import statistics from '../views/statistic.vue'
 
 const router = createRouter({
   history: createWebHistory(
@@ -37,7 +38,12 @@ const router = createRouter({
       component: users_detail,
       props: true
     },
-
+    {
+      path: '/statistics',
+      name: 'statistic',
+      component: statistics,
+      props: true
+    },
     // {
     //   path: '/about',
     //   name: 'about',
