@@ -229,6 +229,11 @@ import { RouterLink, RouterView } from 'vue-router'
                   zmdi zmdi-assignment-account ml-2"> Scanner</i></router-link>
             </li>
 
+            <li class=" nav-item nav-link link-with-badge text"><router-link class="nav-link" to="/statistics"><i class="
+                  zmdi zmdi-chart"> Statistik</i></router-link>
+            </li>
+
+
 
 
           </ul>
