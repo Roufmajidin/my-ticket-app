@@ -8,7 +8,7 @@ dayjs.extend(timezone);
 import { Bar } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
 import { useStatistic } from "@/stores/statistic_controller";
-import { ref, watch } from "vue";
+import { nextTick, ref, watch } from "vue";
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
@@ -18,6 +18,8 @@ export default {
 
   setup() {
     const statistic = useStatistic();
+    const movieSelect = ref(null);
+
     const selectedMovie = ref("");
     const totalSeats = 60;
     const chartData = ref({
@@ -32,7 +34,15 @@ export default {
         },
       ],
     });
-
+    const focusSelect = async () => {
+      await nextTick();
+      if (movieSelect.value) {
+        movieSelect.value.focus();
+        // movieSelect.value.click();
+        const event = new KeyboardEvent("keydown", { key: "ArrowDown" })
+        movieSelect.value.dispatchEvent(event)
+      }
+    };
     const chartOptions = {
       responsive: true,
       scales: {
@@ -87,11 +97,14 @@ export default {
       }
     });
 
+
     return {
       ...statistic,
       selectedMovie,
       chartData,
       chartOptions,
+      focusSelect,
+      movieSelect
     };
   },
 };
@@ -105,36 +118,135 @@ export default {
   <div class="hk-pg-wrapper">
 
     <!-- Breadcrumb -->
-    <div class="row">
-      <div class="col-xl-12">
-        <section class="hk-sec-wrapper">
-          <div class="hk-pg-header mb-10">
-            <div>
-              <h4 class="hk-pg-title"><span class="pg-title-icon"><span class="feather-icon"><i
-                      data-feather="book"></i></span></span>st</h4>
-            </div>
+    <div class="col-xl-12">
+      <section class="hk-sec-wrapper">
+        <div class="hk-pg-header mb-10">
+          <div>
+            <h2 class="hk-pg-title font-weight-600 mb-10">Analytics Dashboard</h2>
+            <p>Rekapitulasi penjualan tiket bioskop
+              <a href="#" @click.prevent="focusSelect">silahkan select movie terkait</a>
+            </p>
+          </div>
+          <div class="hk-pg-header align-items-top">
             <div class="d-flex">
-              <a href="#" class="text-secondary mr-15"><span class="feather-icon"><i
-                    data-feather="printer"></i></span></a>
-              <a href="#" class="text-secondary mr-15"><span class="feather-icon"><i
-                    data-feather="download"></i></span></a>
-              <!-- <button class="btn btn-primary btn-sm">Scanner</button> -->
-              <select class="form-control" v-model="selectedMovie" @change="getStatistic(selectedMovie)">
+              <select ref="movieSelect"
+                class="btn btn-sm btn-outline-primary btn-wth-icon icon-wthot-bg mr-15 mb-15 ml-15"
+                v-model="selectedMovie" @change="getStatistic(selectedMovie)">
                 <option disabled value="">Pilih Movie</option>
 
                 <option v-for="moviess in movies" :key="moviess.id" :value="moviess.movies.id">
                   {{ moviess.movies.judul }}
                 </option>
               </select>
+              <button class="btn btn-sm btn-outline-light btn-wth-icon icon-wthot-bg mr-15 mb-15"><span
+                  class="icon-label"><i class="fa fa-envelope-o"></i> </span><span class="btn-text">Email
+                </span></button>
+              <button class="btn btn-sm btn-outline-light btn-wth-icon icon-wthot-bg mr-15 mb-15"><span
+                  class="icon-label"><i class="fa fa-print"></i> </span><span class="btn-text">Print </span></button>
+              <button class="btn btn-sm btn-outline-primary btn-wth-icon icon-wthot-bg mb-15"><span
+                  class="icon-label"><i class="fa fa-download"></i> </span><span class="btn-text">Export
+                </span></button>
+
             </div>
           </div>
-          <section class="hk-sec-wrapper">
-            <Bar id="my-chart-id" :options="chartOptions" :data="chartData" />
-          </section>
-        </section>
+
+        </div>
+        <div class="row">
+          <div class="col-xl-12">
+            <div class="hk-row">
+              <div class="col-lg-7">
+                <Bar id="my-chart-id" :options="chartOptions" :data="chartData" />
+
+              </div>
+
+              <div class="col-lg-5" v-if="selectedMovie !== ''">
+                <div class=" hk-row">
+                  <div class="col-sm-6">
+                    <div class="card card-sm">
+                      <div class="card-body">
+                        <div class="d-flex justify-content-between mb-5">
+                          <div>
+                            <span class="d-block font-15 text-dark font-weight-500">Movie</span>
+                          </div>
+                          <div>
+                            <span class="badge badge-primary  badge-sm">+10%</span>
+                          </div>
+                        </div>
+                        <div>
+                          <span class="d-block display-5 text-dark mb-5">{{ dataS.movie }}</span>
+                          <small class="d-block">Rp. {{ dataS.datas_movie.harga }}</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="card card-sm">
+                      <div class="card-body">
+                        <div class="d-flex justify-content-between mb-5">
+                          <div>
+                            <span class="d-block font-15 text-dark font-weight-500">Tiket terjual</span>
+                          </div>
+                          <div>
+                            <span class="badge badge-danger   badge-sm">+10%</span>
+                          </div>
+                        </div>
+                        <div>
+                          <span class="d-block display-5 text-dark mb-5">{{ dataS.jumlah_b }}/60 <a
+                              style="font-size: 20px;">sheet</a></span>
+                          <small class="d-block">{{ dataS.jumlah_b }} terjual/60</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="card card-sm">
+                      <div class="card-body">
+                        <div class="d-flex justify-content-between mb-5">
+                          <div>
+                            <span class="d-block font-15 text-dark font-weight-500">Saldo</span>
+                          </div>
+                          <div>
+                            <span class="badge badge-primary  badge-sm">-1.5%</span>
+                          </div>
+                        </div>
+                        <div>
+                          <span class="d-block display-5 text-dark mb-5">{{ dataS.datas_movie.harga * dataS.jumlah_b
+                            }}</span>
+                          <small class="d-block">Tiket x {{ dataS.jumlah_b }} booking</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="card card-sm">
+                      <div class="card-body">
+                        <div class="d-flex justify-content-between mb-5">
+                          <div>
+                            <span class="d-block font-15 text-dark font-weight-500">Earnings</span>
+                          </div>
+                          <div>
+                            <span class="badge badge-warning  badge-sm">+60%</span>
+                          </div>
+                        </div>
+                        <div>
+                          <span class="d-block display-5 text-dark mb-5">$89M</span>
+                          <small class="d-block">$100M Targeted</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
 
-      </div>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+
     </div>
   </div>
 
