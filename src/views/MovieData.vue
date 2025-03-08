@@ -32,8 +32,9 @@ export default {
           <div class="row">
             <div class="col-sm">
               <div class="table-wrap">
-                <button id="" v-on:click="addMovie()" class="btn btn-primary mt-30">Add movie data
+                <button id="" v-on:click="addMovie()" class="btn btn-dark mt-30">Add movie data
                 </button>
+
                 <table id="datable_1" class="table table-hover w-100 display pb-30">
                   <div v-if="loading" class="text-center">Loading...</div>
 
@@ -78,7 +79,7 @@ export default {
                           <i class=" zmdi
                           zmdi-calendar font-18"></i>
                         </button>
-                        <button type="button" class="btn btn-success mr-2" @click="openEditPanel(item, 'edit', index)">
+                        <button type="button" class="btn btn-dark mr-2" @click="openEditPanel(item, 'edit', index)">
 
                           <i class="zmdi zmdi-edit"></i></button>
                         <!-- Setting Panel -->
@@ -102,12 +103,12 @@ export default {
                     <nav class="pagination-wrap d-inline-block mr-40 mt-30" aria-label="Page navigation example">
                       <ul class="pagination custom-pagination pagination-filled">
                         <li @click="fetchMovie(currentPage - 1)" :class="{ 'disabled': currentPage === 1 }"
-                          class="page-item">
+                          class="page-item ">
                           <a class="page-link" href="#"><i class="ion ion-ios-arrow-round-back"></i></a>
                         </li>
                         <li v-for="page in totalPage" :key="page" @click="fetchMovie(page)"
                           :class="{ 'active': currentPage === page }" class="page-item">
-                          <a class="page-link" href="#">{{ page }}</a>
+                          <a class="page-link " href="#">{{ page }}</a>
                         </li>
                         <li @click="fetchMovie(currentPage + 1)" :class="{ 'disabled': currentPage === totalPage }"
                           class="page-item">

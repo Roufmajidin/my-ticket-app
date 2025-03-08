@@ -127,24 +127,24 @@ export default {
               <a href="#" @click.prevent="focusSelect">silahkan select movie terkait</a>
             </p>
           </div>
-          <div class="hk-pg-header align-items-top">
-            <div class="d-flex">
-              <select ref="movieSelect"
-                class="btn btn-sm btn-outline-primary btn-wth-icon icon-wthot-bg mr-15 mb-15 ml-15"
-                v-model="selectedMovie" @change="getStatistic(selectedMovie)">
+          <div class="hk-pg-header align-items-top text-start">
+            <div class="d-flex ">
+              <select style="  text-align: left; text-align-last: left;direction: ltr;" ref="movieSelect"
+                class="btn btn-sm btn-outline-dark btn-wth-icon icon-wthot-bg mr-15 mb-15 ml-15" v-model="selectedMovie"
+                @change="getStatistic(selectedMovie)">
                 <option disabled value="">Pilih Movie</option>
 
                 <option v-for="moviess in movies" :key="moviess.id" :value="moviess.movies.id">
                   {{ moviess.movies.judul }}
                 </option>
               </select>
-              <button class="btn btn-sm btn-outline-light btn-wth-icon icon-wthot-bg mr-15 mb-15"><span
-                  class="icon-label"><i class="fa fa-envelope-o"></i> </span><span class="btn-text">Email
-                </span></button>
-              <button class="btn btn-sm btn-outline-light btn-wth-icon icon-wthot-bg mr-15 mb-15"><span
+
+
+
+              <button class="btn btn-sm btn-outline-secondary btn-wth-icon icon-wthot-bg mr-15 mb-15"><span
                   class="icon-label"><i class="fa fa-print"></i> </span><span class="btn-text">Print </span></button>
-              <button class="btn btn-sm btn-outline-primary btn-wth-icon icon-wthot-bg mb-15"><span
-                  class="icon-label"><i class="fa fa-download"></i> </span><span class="btn-text">Export
+              <button class="btn btn-sm btn-outline-dark btn-wth-icon icon-wthot-bg mb-15"><span class="icon-label"><i
+                    class="fa fa-download"></i> </span><span class="btn-text">Export
                 </span></button>
 
             </div>
