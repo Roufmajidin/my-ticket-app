@@ -174,7 +174,7 @@ export default {
                         </div>
                         <div>
                           <span class="d-block display-5 text-dark mb-5">{{ dataS.movie }}</span>
-                          <small class="d-block">Rp. {{ dataS.datas_movie.harga }}</small>
+                          <small class="d-block">{{ formatRupiah(dataS.datas_movie.harga) }}</small>
                         </div>
                       </div>
                     </div>
@@ -210,7 +210,8 @@ export default {
                           </div>
                         </div>
                         <div>
-                          <span class="d-block display-5 text-dark mb-5">{{ dataS.datas_movie.harga * dataS.jumlah_b
+                          <span class="d-block display-5 text-dark mb-5">{{ formatRupiah(dataS.datas_movie.harga *
+                            dataS.jumlah_b)
                             }}</span>
                           <small class="d-block">Tiket x {{ dataS.jumlah_b }} booking</small>
                         </div>

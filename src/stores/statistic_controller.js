@@ -8,6 +8,7 @@ import timezone from "dayjs/plugin/timezone";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
+import numeral from "numeral";
 
 export function useStatistic() {
   const baseurl = "http://localhost:4000/";
@@ -81,9 +82,12 @@ export function useStatistic() {
       // console.error("Error fetching movies:", error);
     }
   };
-
+  const formatRupiah = (angka) => {
+    return `Rp. ${numeral(angka).format("0,0")}`;
+  }
 
   return {
+    formatRupiah,
     dataS,
     getStatistic,
     fetchMovie,
