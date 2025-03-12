@@ -16,6 +16,8 @@
     "axios": "^1.7.9",
     "chart.js": "^4.4.8",
     "dayjs": "^1.11.13",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.0",
     "numeral": "^2.0.6",
     "pinia": "^2.3.1",
     "socket.io-client": "^4.8.1",

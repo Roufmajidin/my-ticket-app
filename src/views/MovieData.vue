@@ -35,7 +35,7 @@ export default {
                 <button id="" v-on:click="addMovie()" class="btn btn-dark mt-30">Add movie data
                 </button>
 
-                <table id="datable_1" class="table table-hover w-100 display pb-30">
+                <table id="datable_1" class="table-hover w-100 display pb-30">
                   <div v-if="loading" class="text-center">Loading...</div>
 
                   <thead>
@@ -262,7 +262,7 @@ export default {
                             <button id="" v-on:click=" addevent()" class="btn btn-info ml-1 ">{{
 
                               'Add event'
-                            }}</button>
+                              }}</button>
                           </div>
 
                           <div class="dd" v-if="info['status'] == 'success'">
@@ -270,7 +270,7 @@ export default {
                             <button id="" v-on:click=" saveevent()" class="btn btn-info ml-1 ">{{
 
                               'save event'
-                            }}</button>
+                              }}</button>
                           </div>
 
                           <div class="fs ml-6 p-4" v-if="isaddevent == true">

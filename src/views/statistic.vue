@@ -9,7 +9,8 @@ import { Bar } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
 import { useStatistic } from "@/stores/statistic_controller";
 import { nextTick, ref, watch } from "vue";
-
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 //
@@ -52,7 +53,8 @@ export default {
         },
       },
     };
-
+    // data
+    let seats = ref([]);
     const getStatistic = async (id) => {
       if (!id) {
         alert("Silakan pilih movie terlebih dahulu");
@@ -70,7 +72,17 @@ export default {
 
         const labels = data.seat_booked.map((item) => item.tanggal);
         const availableSeats = data.seat_booked.map((item) => totalSeats - item.jumlah_booking);
+        seats.value = availableSeats.map((l, i) =>
+        ({
+          no: i + 1,
+          date: labels[i],
+          seat: availableSeats[i]
+        }))
 
+
+
+
+        console.log(seats.value)
         chartData.value = {
           labels: labels,
           datasets: [
@@ -96,7 +108,35 @@ export default {
         getStatistic(newValue);
       }
     });
+    const generatePDF = async () => {
+      const pdfContent = document.getElementById("pdf-content");
+      const scale = 2;
 
+      const canvas = await html2canvas(pdfContent, {
+        scale: scale,
+        useCORS: true,
+        allowTaint: true,
+      });
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
+      const imgWidth = 190;
+      const pageHeight = 297;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      pdf.addImage(imgData, "PNG", 10, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, "PNG", 10, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      pdf.save("laporan_penjualan.pdf");
+    }
 
     return {
       ...statistic,
@@ -104,10 +144,13 @@ export default {
       chartData,
       chartOptions,
       focusSelect,
-      movieSelect
+      movieSelect,
+      seats,
+      generatePDF
     };
-  },
-};
+  }
+}
+
 
 
 //
@@ -143,15 +186,18 @@ export default {
 
               <button class="btn btn-sm btn-outline-secondary btn-wth-icon icon-wthot-bg mr-15 mb-15"><span
                   class="icon-label"><i class="fa fa-print"></i> </span><span class="btn-text">Print </span></button>
-              <button class="btn btn-sm btn-outline-dark btn-wth-icon icon-wthot-bg mb-15"><span class="icon-label"><i
-                    class="fa fa-download"></i> </span><span class="btn-text">Export
+              <button @click="generatePDF" class="btn btn-sm btn-outline-dark btn-wth-icon icon-wthot-bg mb-15"><span
+                  class="icon-label"><i class="fa fa-download"></i> </span><span class="btn-text">Export
                 </span></button>
 
             </div>
           </div>
-
+          <!-- start pdf -->
         </div>
-        <div class="row">
+        <div class="" id="pdf-content">
+
+          <div class="row">
+          </div>
           <div class="col-xl-12">
             <div class="hk-row">
               <div class="col-lg-7">
@@ -212,7 +258,7 @@ export default {
                         <div>
                           <span class="d-block display-5 text-dark mb-5">{{ formatRupiah(dataS.datas_movie.harga *
                             dataS.jumlah_b)
-                            }}</span>
+                          }}</span>
                           <small class="d-block">Tiket x {{ dataS.jumlah_b }} booking</small>
                         </div>
                       </div>
@@ -244,18 +290,133 @@ export default {
 
             </div>
           </div>
+          <!-- pdf -->
+          <table id="datable_1" class="table table-hover w-100 display pb-30">
+            <thead>
+              <tr>
+                <th>tanggal</th>
+                <th>terbooking</th>
+                <th>Sisa Kursi</th>
+                <th>Dipesan</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in dataS.seat_booked" :key="item">
+                <td>{{ item.tanggal }}</td>
+                <td>{{ item.jumlah_booking }} kursi</td>
+                <td>{{ 60 - item.jumlah_booking }}</td>
+                <td>
+                  <ul style="text-align: start;" v-for="i in item.bookings" :key="i">
+                    <!-- <li href="">id {{ i.booking_id }}</li> -->
+                    <li class="btn btn-secondary" href="">{{ i.seat.seat.number }} {{ i.seat.seat.row }} </li>
+                    {{
+                      i.order.orders.status == 0 ? "Pending" : "Paid" }}
+                    {{ i.order.user.email }}
+                  </ul>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </section>
-
-
     </div>
   </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 </template>
 
 
 <style scoped>
+/* pdf */
+ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+li {
+  margin: 4px 0;
+}
+
+.report {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.report-table th,
+.report-table td {
+  border: 1px solid #000;
+  padding: 8px;
+  text-align: center;
+}
+
+button {
+  margin-top: 20px;
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
 .table {
   width: 100%;
   border-collapse: collapse;
@@ -265,7 +426,7 @@ export default {
 
 
 .table th {
-  background-color: #f8f9fa;
+  background-color: #708CA8FF;
 }
 
 .hk-settings-panel {
