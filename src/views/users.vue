@@ -83,6 +83,7 @@ export default {
                       <th>Username</th>
                       <th>Email</th>
                       <th>created</th>
+                      <th>last login</th>
                       <th>detail</th>
                     </tr>
                   </thead>
@@ -95,6 +96,7 @@ export default {
                       <td>{{ item.name }}</td>
                       <td>{{ item.email }}</td>
                       <td>{{ formatDate(item.created_at) }}</td>
+                      <td>{{ formatDate(item.last_login) }}</td>
                       <td>
                         <router-link :to="{ name: 'users_detail', params: { id: item.id } }">
 
