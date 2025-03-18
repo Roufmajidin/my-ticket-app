@@ -8,21 +8,16 @@ dayjs.extend(timezone);
 import { useUsers } from "@/stores/users_controller";
 import { useScanner } from "@/stores/scanner_controller";
 import { useRoute } from "vue-router";
-// import { QrcodeStream } from "vue-barcode-reader";
-// import { QrcodeStream } from 'vue-qrcode-reader'
+
 import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from 'vue-qrcode-reader'
 
 export default {
-  // name: "usersVi",
   components: {
     QrcodeStream,
-    QrcodeDropZone,
-    QrcodeCapture
+
   },
 
   setup() {
-    // const QrcodeStream = defineAsyncComponent(() => import("vue-qrcode-stream"));
-
     //
     const route = useRoute()
     const isScan = computed(() => route.query.isScan === "true");
@@ -147,10 +142,8 @@ export default {
                       <p class="font-14">
 
                       </p>
-                      <!-- <QrcodeStream :constraints="{ video: { facingMode: 'environment' } }" /> -->
 
                       Scanner :
-                      <!-- <QrcodeStream v-if="isScan" @decode="onDecode" @init="onError" /> -->
                       <QrcodeStream v-if="isScan == true" @detect="onDecode" @init="onError" />
 
                       <p v-if="result">Hasil Scan: {{ result[0]?.rawValue }}</p>
@@ -182,8 +175,6 @@ export default {
   border-collapse: collapse;
   margin-top: 20px;
 }
-
-
 
 .table th {
   background-color: #f8f9fa;
